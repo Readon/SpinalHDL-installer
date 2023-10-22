@@ -111,7 +111,7 @@ create_chroot_system() {
     pacman -S filesystem msys2-runtime --noconfirm --root "${_newmsys}"
     pacman -S base --noconfirm --root "${_newmsys}"
     pacman -S ${_packages} --noconfirm --root "${_newmsys}"
-    install_custom_packages
+    # install_custom_packages
   popd > /dev/null
 }
 
