@@ -11,6 +11,44 @@ _version="${_date}"
 _newmsysbase="${_build}/newmsys"
 _newmsys="${_newmsysbase}/msys64"
 
+if [ "$MINGW_PACKAGE_PREFIX" = "mingw-w64-i686" ]; then
+  mcode="mcode"
+else
+  mcode="llvm"
+fi
+
+_custom_packages="
+${MINGW_PACKAGE_PREFIX}-yosys-0.31-1-any.pkg.tar.zst
+${MINGW_PACKAGE_PREFIX}-python-sby-0.31-1-any.pkg.tar.zst
+"
+
+_packages=$(cat << EOF
+  ${MINGW_PACKAGE_PREFIX}-toolchain
+  ${MINGW_PACKAGE_PREFIX}-autotools
+  ${MINGW_PACKAGE_PREFIX}-iverilog
+  ${MINGW_PACKAGE_PREFIX}-ghdl-${mcode}
+  ${MINGW_PACKAGE_PREFIX}-z3
+  ${MINGW_PACKAGE_PREFIX}-yices
+EOF
+)
+
+install_custom_packages(){  
+  _url="https://repo.msys2.org/mingw/${MSYSTEM}"
+  _cwd="$(`pwd`)"
+  _tmp="${_cwd}/tmp"
+  if [ ! -d "${_tmp}" ]; then
+      mkdir -p "${_tmp}"
+  fi
+  cd ${_tmp}
+  for pkg in ${_custom_packages}; do
+      if [ ! -f "${pkg}" ]; then
+        curl -O "${_url}/${pkg}"
+      fi
+  done
+  pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*
+  cd ${_cwd}
+}
+
 create_installer_archive() {
   echo "[Creating installer archive...]"
 
@@ -72,6 +110,8 @@ create_chroot_system() {
     pacman -Syu --root "${_newmsys}"
     pacman -S filesystem msys2-runtime --noconfirm --root "${_newmsys}"
     pacman -S base --noconfirm --root "${_newmsys}"
+    pacman -S ${_packages} --noconfirm --root "${_newmsys}"
+    install_custom_packages
   popd > /dev/null
 }
 
