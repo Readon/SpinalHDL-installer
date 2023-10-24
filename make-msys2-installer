@@ -25,6 +25,7 @@ ${MINGW_PACKAGE_PREFIX}-python-sby-0.31-1-any.pkg.tar.zst
 _packages=$(cat << EOF
   ${MINGW_PACKAGE_PREFIX}-toolchain
   ${MINGW_PACKAGE_PREFIX}-autotools
+  ${MINGW_PACKAGE_PREFIX}-verilator
   ${MINGW_PACKAGE_PREFIX}-iverilog
   ${MINGW_PACKAGE_PREFIX}-ghdl-${mcode}
   ${MINGW_PACKAGE_PREFIX}-z3
