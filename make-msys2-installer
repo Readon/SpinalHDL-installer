@@ -33,7 +33,7 @@ EOF
 )
 
 install_custom_packages(){  
-  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v0.4.9/"
+  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v0.4.9"
   _cwd="$(pwd)"
   _tmp="${_cwd}/tmp"
   if [ ! -d "${_tmp}" ]; then
@@ -42,7 +42,7 @@ install_custom_packages(){
   cd ${_tmp}
   for pkg in ${_custom_packages}; do
       if [ ! -f "${pkg}" ]; then
-        curl -O "${_url}/${pkg}"
+        wget "${_url}/${pkg}"
       fi
   done
   pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*
