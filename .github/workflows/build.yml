@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - all-in-one
 
 concurrency: nope
 
