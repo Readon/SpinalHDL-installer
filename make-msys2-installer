@@ -33,7 +33,7 @@ EOF
 )
 
 install_custom_packages(){  
-  _url="https://repo.msys2.org/mingw/${MSYSTEM}"
+  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v0.4.9/"
   _cwd="$(`pwd`)"
   _tmp="${_cwd}/tmp"
   if [ ! -d "${_tmp}" ]; then
