@@ -2,6 +2,7 @@
 
 set -e
 
+_srcdir="$(pwd)"
 _thisdir="$( cd "$( dirname "$0" )" && pwd )"
 _build="${_thisdir}/_build"
 _ifwroot="${_build}/qt-ifw"
@@ -48,6 +49,28 @@ install_custom_packages(){
   done
   pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*
   cd ${_cwd}
+}
+
+SDKMAN_DIR=${_newmsys}/sdkman
+install_sdkman(){
+  HOME=${_newmsys}/etc/skel ${_srcdir}/sdkman.sh
+  source $SDKMAN_DIR/bin/sdkman-init.sh
+}
+
+install_java_sbt(){  
+  sdk install java 17.0.8.1-ms
+  sdk install sbt 1.6.0
+}
+
+install_spinalhdl(){
+  COURSIER_CACHE=${_newmsys}/cache
+  echo "COURSIER_CACHE=/cache >> ${_newmsys}/etc/skel/.bashrc"
+  git clone https://github.com/SpinalHDL/SpinalWorkshop.git
+  cd SpinalWorkshop
+  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt compile
+  # ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt test
+  cd ..
+  rm -rf SpinalWorkshop
 }
 
 create_installer_archive() {
@@ -113,6 +136,9 @@ create_chroot_system() {
     pacman -S base --noconfirm --root "${_newmsys}"
     pacman -S ${_packages} --noconfirm --root "${_newmsys}"
     install_custom_packages
+    install_sdkman
+    install_java_sbt
+    install_spinalhdl
   popd > /dev/null
 }
 
