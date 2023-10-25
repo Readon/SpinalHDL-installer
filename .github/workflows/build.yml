@@ -24,6 +24,7 @@ jobs:
           update: true
           install: >-
             tar
+            zip
             unzip
             mingw-w64-x86_64-qt-installer-framework
             mingw-w64-x86_64-7zip
