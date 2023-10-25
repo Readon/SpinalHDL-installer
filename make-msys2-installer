@@ -52,9 +52,10 @@ install_custom_packages(){
 }
 
 install_sdkman(){
-  SDKMAN_DIR=${_newmsys}/sdkman
+  export SDKMAN_DIR=${_newmsys}/sdkman
   HOME=${_newmsys}/etc/skel ${_srcdir}/sdkman.sh
   ls -R ${_newmsys}
+  echo $SDKMAN_DIR
   source $SDKMAN_DIR/bin/sdkman-init.sh
 
   sdk install java 17.0.8.1-ms
