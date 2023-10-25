@@ -46,7 +46,7 @@ jobs:
       - name: Build Installer
         shell: msys2 {0}
         run: |
-          bash make-msys2-installer
+          bash make-msys2-installer ${{ github.ref }}
 
       - name: Create 'latest' Variants and Checksums
         run: |
