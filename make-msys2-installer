@@ -54,6 +54,7 @@ install_custom_packages(){
 SDKMAN_DIR=${_newmsys}/sdkman
 install_sdkman(){
   HOME=${_newmsys}/etc/skel ${_srcdir}/sdkman.sh
+  ls -R $SDKMAN_DIR
   source $SDKMAN_DIR/bin/sdkman-init.sh
 }
 
