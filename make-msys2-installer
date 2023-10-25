@@ -49,6 +49,7 @@ install_custom_packages(){
   done
   pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*
   cd ${_cwd}
+  rm -rf ${_tmp}
 }
 
 install_sdkman(){
