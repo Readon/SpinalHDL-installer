@@ -51,14 +51,12 @@ install_custom_packages(){
   cd ${_cwd}
 }
 
-SDKMAN_DIR=${_newmsys}/sdkman
 install_sdkman(){
+  SDKMAN_DIR=${_newmsys}/sdkman
   HOME=${_newmsys}/etc/skel ${_srcdir}/sdkman.sh
-  ls -R $SDKMAN_DIR
+  ls -R ${_newmsys}
   source $SDKMAN_DIR/bin/sdkman-init.sh
-}
 
-install_java_sbt(){  
   sdk install java 17.0.8.1-ms
   sdk install sbt 1.6.0
 }
@@ -138,7 +136,6 @@ create_chroot_system() {
     pacman -S ${_packages} --noconfirm --root "${_newmsys}"
     install_custom_packages
     install_sdkman
-    install_java_sbt
     install_spinalhdl
   popd > /dev/null
 }
