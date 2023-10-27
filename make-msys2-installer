@@ -15,8 +15,10 @@ _tagname="$1"
 
 if [ "$MINGW_PACKAGE_PREFIX" = "mingw-w64-i686" ]; then
   mcode="mcode"
+  msystem="mingw32"
 else
   mcode="llvm"
+  msystem="mingw64"
 fi
 
 _custom_packages="
@@ -24,10 +26,15 @@ ${MINGW_PACKAGE_PREFIX}-yosys-0.31-1-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-python-sby-0.31-1-any.pkg.tar.zst
 "
 
+_versioned_packages_url = "
+https://mirror.msys2.org/mingw/${msystem}/${MINGW_PACKAGE_PREFIX}-verilator-4.228-1-any.pkg.tar.zst
+"
+
 _packages=$(cat << EOF
+  git
   ${MINGW_PACKAGE_PREFIX}-toolchain
   ${MINGW_PACKAGE_PREFIX}-autotools
-  ${MINGW_PACKAGE_PREFIX}-verilator
+  ${MINGW_PACKAGE_PREFIX}-gtkwave
   ${MINGW_PACKAGE_PREFIX}-iverilog
   ${MINGW_PACKAGE_PREFIX}-ghdl-${mcode}
   ${MINGW_PACKAGE_PREFIX}-z3
@@ -35,22 +42,40 @@ _packages=$(cat << EOF
 EOF
 )
 
-install_custom_packages(){  
-  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v0.4.9"
-  _cwd="$(pwd)"
-  _tmp="${_cwd}/tmp"
+prepare_tmp_dir(){
+  _tmp="${_newmsys}/tmp"
   if [ ! -d "${_tmp}" ]; then
       mkdir -p "${_tmp}"
   fi
   cd ${_tmp}
+}
+
+clean_tmp_dir(){
+  rm -rf ${_newmsys}/tmp/*
+  cd ${_newmsys}
+}
+
+install_versioned_packages(){
+  prepare_tmp_dir
+  for pkg_file in ${_versioned_packages_url}; do
+      if [ ! -f "${pkg_file}" ]; then
+        wget "${pkg_file}"
+      fi
+  done
+  pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*  
+  clean_tmp_dir
+}
+
+install_custom_packages(){  
+  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v0.4.9"
+  prepare_tmp_dir
   for pkg in ${_custom_packages}; do
       if [ ! -f "${pkg}" ]; then
         wget "${_url}/${pkg}"
       fi
   done
   pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*
-  cd ${_cwd}
-  rm -rf ${_tmp}
+  clean_tmp_dir
 }
 
 install_sdkman(){
