@@ -26,7 +26,7 @@ ${MINGW_PACKAGE_PREFIX}-yosys-0.31-1-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-python-sby-0.31-1-any.pkg.tar.zst
 "
 
-_versioned_packages_url = "
+_versioned_packages_url="
 https://mirror.msys2.org/mingw/${msystem}/${MINGW_PACKAGE_PREFIX}-verilator-4.228-1-any.pkg.tar.zst
 "
 
