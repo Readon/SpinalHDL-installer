@@ -32,8 +32,6 @@ https://mirror.msys2.org/mingw/${msystem}/${MINGW_PACKAGE_PREFIX}-verilator-4.22
 
 _packages=$(cat << EOF
   git
-  ${MINGW_PACKAGE_PREFIX}-toolchain
-  ${MINGW_PACKAGE_PREFIX}-autotools
   ${MINGW_PACKAGE_PREFIX}-gtkwave
   ${MINGW_PACKAGE_PREFIX}-iverilog
   ${MINGW_PACKAGE_PREFIX}-ghdl-${mcode}
