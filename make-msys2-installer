@@ -39,6 +39,7 @@ _packages=$(cat << EOF
   ${MINGW_PACKAGE_PREFIX}-ghdl-${mcode}
   ${MINGW_PACKAGE_PREFIX}-z3
   ${MINGW_PACKAGE_PREFIX}-yices
+  ${MINGW_PACKAGE_PREFIX}-python-click
 EOF
 )
 
