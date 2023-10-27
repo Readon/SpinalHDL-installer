@@ -64,7 +64,7 @@ install_sdkman(){
 
 install_spinalhdl(){
   export COURSIER_CACHE=${_newmsys}/cache
-  echo "COURSIER_CACHE=/cache" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export COURSIER_CACHE=/cache" >> ${_newmsys}/etc/skel/.bashrc
   git clone https://github.com/SpinalHDL/SpinalWorkshop.git
   cd SpinalWorkshop
 
