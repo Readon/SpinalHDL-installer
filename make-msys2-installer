@@ -2,7 +2,7 @@
 
 set -e
 
-_spinal_version="1.9.3"
+_spinal_version="1.7.3"
 _yosys_major_version="0.31"
 _verilator_version="4.228-1"
 _sbt_version="1.6.0"
