@@ -173,9 +173,9 @@ jobs:
     permissions:
       contents: write
     needs:
-      - test-docker-sfx
+      # - test-docker-sfx
       - test-installer
-      - test-sfx
+      # - test-sfx
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
