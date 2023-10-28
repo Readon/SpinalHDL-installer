@@ -1,7 +1,7 @@
 # MSYS2 Installer
 
 This project is to make a installer to helping on setup a working msys2 environment for developping SpinalHDL design, in one step, offline.
-The installer in the (release)[https://github.com/Readon/msys2-installer/releases] directory of this repos contains separate versions of the SpinalHDL jar file, released with the same version number as the version of the SpinalHDL libraries contained therein.
+The installer in the [release](https://github.com/Readon/msys2-installer/releases) directory of this repos contains separate versions of the SpinalHDL jar file, released with the same version number as the version of the SpinalHDL libraries contained therein.
 
 ![screenshot](screenshot.png)
 
