@@ -2,6 +2,12 @@
 
 set -e
 
+_spinal_version="1.9.3"
+_yosys_major_version="0.31"
+_verilator_version="4.228-1"
+_sbt_version="1.6.0"
+_java_version="17.0.8.1-tem"
+
 _srcdir="$(pwd)"
 _thisdir="$( cd "$( dirname "$0" )" && pwd )"
 _build="${_thisdir}/_build"
@@ -12,6 +18,7 @@ _version="${_date}"
 _newmsysbase="${_build}/newmsys"
 _newmsys="${_newmsysbase}/msys64"
 _tagname="$1"
+_yosys_version="${_yosys_major_verison}-1"
 
 if [ "$MINGW_PACKAGE_PREFIX" = "mingw-w64-i686" ]; then
   mcode="mcode"
@@ -22,12 +29,12 @@ else
 fi
 
 _custom_packages="
-${MINGW_PACKAGE_PREFIX}-yosys-0.31-1-any.pkg.tar.zst
-${MINGW_PACKAGE_PREFIX}-python-sby-0.31-1-any.pkg.tar.zst
+${MINGW_PACKAGE_PREFIX}-yosys-${_yosys_version}-any.pkg.tar.zst
+${MINGW_PACKAGE_PREFIX}-python-sby-${_yosys_version}-any.pkg.tar.zst
 "
 
 _versioned_packages_url="
-https://mirror.msys2.org/mingw/${msystem}/${MINGW_PACKAGE_PREFIX}-verilator-4.228-1-any.pkg.tar.zst
+https://mirror.msys2.org/mingw/${msystem}/${MINGW_PACKAGE_PREFIX}-verilator-${_verilator_version}-any.pkg.tar.zst
 "
 
 _packages=$(cat << EOF
@@ -65,8 +72,8 @@ install_versioned_packages(){
   clean_tmp_dir
 }
 
-install_custom_packages(){  
-  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v0.4.9"
+install_custom_packages(){
+  _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v${_yosys_major_version}"
   prepare_tmp_dir
   for pkg in ${_custom_packages}; do
       if [ ! -f "${pkg}" ]; then
@@ -82,8 +89,8 @@ install_sdkman(){
   HOME=${_newmsys}/etc/skel ${_srcdir}/sdkman.sh
   source $SDKMAN_DIR/bin/sdkman-init.sh
 
-  sdk install java 17.0.8.1-tem
-  sdk install sbt 1.6.0
+  sdk install java $_java_version
+  sdk install sbt $_sbt_version
 }
 
 install_spinalhdl(){
@@ -92,13 +99,14 @@ install_spinalhdl(){
   git clone https://github.com/SpinalHDL/SpinalWorkshop.git
   cd SpinalWorkshop
 
-  if [ -n "$_tagname" ]; then
-    _pattern="refs/tags/v(.*)"
-    if [[ $_tagname =~ $_pattern ]]; then
-      export _version="${BASH_REMATCH[1]}"
-    fi
-  fi
-  sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_version}\"/" build.sbt
+  # if [ -n "$_tagname" ]; then
+  #   _pattern="refs/tags/v(.*)"
+  #   if [[ $_tagname =~ $_pattern ]]; then
+  #     export _version="${BASH_REMATCH[1]}"
+  #   fi
+  # fi
+  # sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_version}\"/" build.sbt
+  sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
 
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt compile
   # ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt test
