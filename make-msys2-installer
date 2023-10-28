@@ -18,7 +18,7 @@ _version="${_date}"
 _newmsysbase="${_build}/newmsys"
 _newmsys="${_newmsysbase}/msys64"
 _tagname="$1"
-_yosys_version="${_yosys_major_verison}-1"
+_yosys_version="${_yosys_major_version}-1"
 
 if [ "$MINGW_PACKAGE_PREFIX" = "mingw-w64-i686" ]; then
   mcode="mcode"
