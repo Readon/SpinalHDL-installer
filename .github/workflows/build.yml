@@ -180,11 +180,30 @@ jobs:
         with:
           name: installer
 
+      - name: Set Release Tag
+        id: set_tag
+        if: github.ref == ''
+        run: echo "::set-output name=tag_name::draft-$(date +'%Y%m%d%H%M%S')"
+
       - name: Upload Installers
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          if: github.ref == ''
+          tag_name: ${{ steps.set_tag.outputs.tag_name }}
+          draft: ${{ github.ref == '' }}
+          body: ${{ github.event.head_commit.message }}
+          files: |
+            msys2-*
+
+      - name: Upload Installers with Tag
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          if: github.ref != ''
+          tag_name: ${{ github.ref }}
           draft: ${{ github.ref == '' }}
           body: ${{ github.event.head_commit.message }}
           files: |
