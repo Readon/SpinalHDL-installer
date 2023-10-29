@@ -107,6 +107,7 @@ install_dependencies(){
   sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt update
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt compile
+  # ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt test
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt "set libraryDependencies += \"com.github.spinalhdl\" %% \"spinalhdl-tester\" % \"${_spinal_version}\"; update"
 
   cd ..
@@ -121,7 +122,7 @@ install_spinalhdl(){
 
   install_dependencies https://github.com/SpinalHDL SpinalHDL v${_spinal_version}
   install_dependencies https://github.com/SpinalHDL SpinalWorkshop
-  install_dependencies https://github.com/SpinalHDL SpinalTemplateSbt
+  # install_dependencies https://github.com/SpinalHDL SpinalTemplateSbt
   install_dependencies https://github.com/SpinalHDL VexRiscv
   install_dependencies https://github.com/SpinalHDL NaxRiscv
   install_dependencies https://github.com/SpinalHDL SaxonSoc
