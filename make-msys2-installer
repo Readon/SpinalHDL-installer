@@ -94,8 +94,11 @@ install_sdkman(){
 }
 
 install_spinalhdl(){
-  export COURSIER_CACHE=${_newmsys}/cache
-  echo "export COURSIER_CACHE=/cache" >> ${_newmsys}/etc/skel/.bashrc
+  export COURSIER_CACHE=${_newmsys}/cache/.coursier
+  echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc
+  export SBT_OPTS="-Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
+  echo "export SBT_OPTS=\"-Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
+
   git clone https://github.com/SpinalHDL/SpinalWorkshop.git
   cd SpinalWorkshop
 
