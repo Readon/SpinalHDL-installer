@@ -93,19 +93,30 @@ install_sdkman(){
   sdk install sbt $_sbt_version
 }
 
+install_dependencies(){
+  _url_prefix=$1
+  _repo_name=$2
+  _tag=$3
+  git clone ${_url_prefix}/${_repo_name}.git
+  cd ${_repo_name}  
+  if [ ${_tag}=='' ]; then
+    git checkout --quiet ${_tag}
+  fi
+
+  sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
+  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt update
+
+  cd ..
+  rm -rf ${_repo_name}
+}
+
 install_spinalhdl(){
   export COURSIER_CACHE=${_newmsys}/cache/.coursier
   echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc
   export SBT_OPTS="-Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=1.8.0 -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 
-  git clone https://github.com/SpinalHDL/SpinalWorkshop.git
-  cd SpinalWorkshop
-  sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
-  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt update
-
-  cd ..
-  rm -rf SpinalWorkshop
+  install_dependencies https://github.com/SpinalHDL SpinalWorkshop
 }
 
 create_installer_archive() {
