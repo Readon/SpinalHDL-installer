@@ -106,6 +106,7 @@ install_dependencies(){
 
   sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt update
+  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt compile
 
   cd ..
   rm -rf ${_repo_name}
