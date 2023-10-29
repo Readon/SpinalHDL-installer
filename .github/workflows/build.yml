@@ -3,10 +3,9 @@ name: 'build'
 on:
   push:
     branches:
-      - main
-      - all-in-one
+      - '*'
     tags:
-        - '*'
+      - '*'
 
 concurrency: nope
 
@@ -185,7 +184,7 @@ jobs:
       - name: Set Release Tag
         id: set_tag
         if: startsWith(github.ref, 'refs/heads/')
-        run: echo "::set-output name=tag_name::draft-$(date +'%Y%m%d%H%M%S')"
+        run: branch_name=${{ github.ref }} echo "::set-output name=tag_name::${branch_name/refs\/heads\//}-$(date +'%Y%m%d%H%M%S')"
 
       - name: Upload Installers
         uses: softprops/action-gh-release@v1
