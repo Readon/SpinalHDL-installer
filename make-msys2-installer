@@ -116,7 +116,12 @@ install_spinalhdl(){
   export SBT_OPTS="-Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=1.8.0 -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 
+  install_dependencies https://github.com/SpinalHDL SpinalHDL v${_spinal_version}
   install_dependencies https://github.com/SpinalHDL SpinalWorkshop
+  install_dependencies https://github.com/SpinalHDL SpinalTemplateSbt
+  install_dependencies https://github.com/SpinalHDL VexRiscv
+  install_dependencies https://github.com/SpinalHDL NaxRiscv
+  install_dependencies https://github.com/SpinalHDL SaxonSoc
 }
 
 create_installer_archive() {
