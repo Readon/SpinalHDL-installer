@@ -102,6 +102,7 @@ install_dependencies(){
   if [ ${_tag}!='' ]; then
     git checkout --quiet ${_tag}
   fi
+  git submodule update --init --recursive
 
   sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt update
