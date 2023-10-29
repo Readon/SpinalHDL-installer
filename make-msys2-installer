@@ -112,7 +112,7 @@ install_spinalhdl(){
   sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
 
   ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt compile
-  # ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt test
+  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt test
   cd ..
   rm -rf SpinalWorkshop
 }
