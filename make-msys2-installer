@@ -101,18 +101,9 @@ install_spinalhdl(){
 
   git clone https://github.com/SpinalHDL/SpinalWorkshop.git
   cd SpinalWorkshop
-
-  # if [ -n "$_tagname" ]; then
-  #   _pattern="refs/tags/v(.*)"
-  #   if [[ $_tagname =~ $_pattern ]]; then
-  #     export _version="${BASH_REMATCH[1]}"
-  #   fi
-  # fi
-  # sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_version}\"/" build.sbt
   sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
-
-  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt compile
-  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt test
+  ${_newmsys}/sdkman/candidates/sbt/current/bin/sbt update
+  
   cd ..
   rm -rf SpinalWorkshop
 }
