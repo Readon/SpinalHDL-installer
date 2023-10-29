@@ -3,6 +3,8 @@
 This project is to make a installer to helping on setup a working msys2 environment for developping SpinalHDL design, in one step, offline.
 The installer in the (release)[https://github.com/Readon/msys2-installer/releases] directory of this repos contains separate versions of the SpinalHDL jar file, released with the same version number as the version of the SpinalHDL libraries contained therein.
 
+> Note: the installed sbt runtime version is 1.8.0. I add an option to SBT_OPTS to fixs this, it would override your project's sbt.version which is normally specified in project/build.properties file.
+
 ![screenshot](screenshot.png)
 
 ## CLI Usage examples
