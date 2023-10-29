@@ -99,7 +99,7 @@ install_dependencies(){
   _tag=$3
   git clone ${_url_prefix}/${_repo_name}.git
   cd ${_repo_name}  
-  if [ ${_tag}=='' ]; then
+  if [ ${_tag}!='' ]; then
     git checkout --quiet ${_tag}
   fi
 
