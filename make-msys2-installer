@@ -3,6 +3,7 @@
 set -e
 
 _spinal_version="1.9.3"
+_scala_version="2.11"
 _yosys_major_version="0.31"
 _verilator_version="4.228-1"
 _sbt_version="1.6.0"
@@ -115,18 +116,42 @@ install_dependencies(){
   rm -rf ${_repo_name}
 }
 
-install_spinalhdl(){
+install_coursier(){
   export COURSIER_CACHE=${_newmsys}/cache/.coursier
-  echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc  
+  export COURSIER_HOME=/coursier
+  export PATH="$PATH:/coursier"
+  echo "export PATH=\"$PATH:/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
+  alias coursier=cs.bat
+  echo "alias coursier=cs.bat" >> ${_newmsys}/etc/skel/.bashrc
+
+  wget "https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-win32.zip"
+  unzip cs-x86_64-pc-win32.zip
+  ./cs-x86_64-pc-win32.exe setup --dir ${_newmsys}/coursier
+}
+
+setup_sbt(){
   export SBT_OPTS="-Dsbt.version=1.8.0 -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=1.8.0 -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 
-  install_dependencies https://github.com/SpinalHDL SpinalHDL v${_spinal_version}
-  install_dependencies https://github.com/SpinalHDL SpinalWorkshop
-  # install_dependencies https://github.com/SpinalHDL SpinalTemplateSbt
-  install_dependencies https://github.com/SpinalHDL VexRiscv
-  install_dependencies https://github.com/SpinalHDL NaxRiscv
-  install_dependencies https://github.com/SpinalHDL SaxonSoc
+  coursier install scala:2.12.17
+  coursier fetch org.scala-sbt:compiler-bridge_${_scala_version}:1.8.0
+  coursier fetch jline:jline:2.14.6
+  coursier fetch jline:jline:2.14.3
+  coursier fetch --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
+}
+
+install_spinalhdl_dependencies(){
+  coursier fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
+  coursier fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
+  coursier fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}
+  coursier fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
+}
+
+install_spinalhdl(){
+  install_coursier
+  setup_sbt
+  install_spinalhdl_dependencies
 }
 
 create_installer_archive() {
