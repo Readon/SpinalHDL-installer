@@ -52,11 +52,6 @@ jobs:
         run: |
           bash make-msys2-installer ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}
 
-      - name: Create 'latest' Variants and Checksums
-        run: |
-          sha256sum.exe msys2-*
-          sha256sum.exe msys2-* > msys2-checksums.txt
-
       - name: Upload Results
         uses: actions/upload-artifact@v3
         with:
@@ -111,6 +106,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: installer
+
+      - name: Create 'latest' Variants and Checksums
+        run: |
+          sha256sum.exe msys2-*
+          sha256sum.exe msys2-* > msys2-checksums.txt
 
       - name: Set Release Tag
         id: set_tag
