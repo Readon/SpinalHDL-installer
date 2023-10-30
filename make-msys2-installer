@@ -105,7 +105,7 @@ install_coursier(){
   export COURSIER_CACHE=${_newmsys}/cache/.coursier
   echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc  
   export COURSIER_HOME=${_newmsys}/coursier
-  echo "export PATH=\"$PATH:/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export PATH=\"\$PATH:/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
   echo "alias coursier=cs.bat" >> ${_newmsys}/etc/skel/.bashrc
 
   wget "https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-win32.zip"
