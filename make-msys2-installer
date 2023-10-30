@@ -129,7 +129,7 @@ install_coursier(){
 }
 
 setup_sbt(){
-  export COURSIER="${_newmsys}/coursier/cs.bat"
+  export COURSIER="${COURSIER_HOME}/cs.bat"
   export SBT_OPTS="-Dsbt.version=1.8.0 -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=1.8.0 -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 
@@ -141,7 +141,7 @@ setup_sbt(){
 }
 
 install_spinalhdl_dependencies(){
-  # export COURSIER="${_newmsys}/coursier/cs.bat"
+  # export COURSIER="${COURSIER_HOME}/cs.bat"
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}
