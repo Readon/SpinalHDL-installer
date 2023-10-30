@@ -115,7 +115,7 @@ jobs:
       - name: Set Release Tag
         id: set_tag
         if: startsWith(github.ref, 'refs/heads/')
-        run: echo "::set-output name=tag_name::all-in-one-$(date +'%Y%m%d%H%M%S')"
+        run: echo "tag_name=all-in-one-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Upload Installers
         uses: ncipollo/release-action@v1
