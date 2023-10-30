@@ -118,23 +118,25 @@ jobs:
         run: echo "::set-output name=tag_name::all-in-one-$(date +'%Y%m%d%H%M%S')"
 
       - name: Upload Installers
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         if: startsWith(github.ref, 'refs/heads/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.set_tag.outputs.tag_name }}
+          tag: ${{ steps.set_tag.outputs.tag_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
-          body: ${{ github.event.head_commit.message }}
-          files: |
-            msys2-*
+          body: ${{ github.event.head_commit.message }}          
+          artifacts: "msys2-*"
+          
 
       - name: Upload Installers with Tag
-        uses: softprops/action-gh-release@v1        
+        uses: ncipollo/release-action@v1        
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           body: ${{ github.event.head_commit.message }}
-          files: |
+          artifacts: |
             msys2-*
