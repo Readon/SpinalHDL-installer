@@ -128,8 +128,8 @@ install_spinalhdl_dependencies(){
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}
-  small_version=$(echo -e "${_spinal_version}\n${_spinal_with_tester}" | sort -V | head -n 1)
-  if [[ small_version == ${_spinal_with_tester} ]]; then
+  export _small_version=$(echo -e "${_spinal_version}\n${_spinal_with_tester}" | sort -V | head -n 1)
+  if [ ${_small_version} == ${_spinal_with_tester} ]; then
     ${COURSIER} fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
   else
     ${COURSIER} fetch cs fetch org.scalatest:scalatest_${_scala_version}:3.2.5
