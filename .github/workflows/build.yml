@@ -12,6 +12,11 @@ concurrency: nope
 jobs:
   build-installer:
     runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        scalaVersion: [2.11, 2.12, 2.13]
+        spinalVersion: [1.6.4, 1.8.2, 1.9.3]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -45,13 +50,10 @@ jobs:
       - name: Build Installer
         shell: msys2 {0}
         run: |
-          bash make-msys2-installer ${{ github.ref }}
+          bash make-msys2-installer ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}
 
       - name: Create 'latest' Variants and Checksums
         run: |
-          mv msys2-base-x86_64-[0-9]*.sfx.exe msys2-base-x86_64-latest.sfx.exe
-          mv msys2-x86_64-[0-9]*.exe msys2-x86_64-latest.exe
-          mv msys2-*.tar.xz msys2-base-x86_64-latest.tar.xz
           sha256sum.exe msys2-*
           sha256sum.exe msys2-* > msys2-checksums.txt
 
@@ -69,6 +71,8 @@ jobs:
       fail-fast: false
       matrix:
         image: [2019, 2022]
+        scalaVersion: [2.11, 2.12, 2.13]
+        spinalVersion: [1.6.4, 1.8.2, 1.9.3]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -79,7 +83,7 @@ jobs:
 
       - name: Install
         run: |
-          ./msys2-x86_64-latest.exe in --confirm-command --accept-messages --root C:/msys2-install-test
+          ./msys2-x86_64-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.exe in --confirm-command --accept-messages --root C:/msys2-install-test
 
       - name: Test without Login Shell
         run: |
@@ -97,84 +101,11 @@ jobs:
         run: |
           C:\msys2-install-test\uninstall.exe pr --confirm-command
 
-  test-docker-sfx:
-    name: docker-sfx-${{ matrix.image }}
-    runs-on: windows-${{ matrix.image }}
-    if: false
-    needs: build-installer
-    strategy:
-      fail-fast: false
-      matrix:
-        image: [2019, 2022]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: installer
-
-      - name: Build image
-        run: |
-          docker build -t msys2-base -f ./.ci/Dockerfile.${{ matrix.image }} .
-
-      - name: Test without Login Shell
-        run: |
-          docker run msys2-base C:\msys64\usr\bin\pacman.exe -Syy
-          docker run msys2-base C:\msys64\usr\bin\pacman.exe --noconfirm -S vim
-
-      - name: Test
-        run: |
-          docker run msys2-base C:\msys64\usr\bin\bash.exe -lc "pacman --version"
-          docker run msys2-base C:\msys64\usr\bin\bash.exe -lc "pacman -Qkv"
-          docker run msys2-base C:\msys64\usr\bin\bash.exe -lc "pacman -Qkk || true"
-          docker run msys2-base C:\msys64\usr\bin\bash.exe -lc "pacman -Syy"
-          docker run msys2-base C:\msys64\usr\bin\bash.exe -lc "pacman -S --noconfirm git"
-
-  test-sfx:
-    name: sfx-${{ matrix.image }}
-    runs-on: windows-${{ matrix.image }}
-    if: false
-    needs: build-installer
-    strategy:
-      fail-fast: false
-      matrix:
-        image: [2019, 2022]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: installer
-
-      - name: Install
-        run: |
-          ./msys2-base-x86_64-latest.sfx.exe  -y -oC:/msys2-install-test
-
-      - name: Test without Login Shell
-        run: |
-          $env:Path = 'C:\msys2-install-test\msys64\usr\bin;' + $env:Path
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -c "pacman-key --init"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -c "pacman-key --populate"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -c "pacman -Syy"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -c "pacman --noconfirm -S vim"
-
-      - name: Test
-        run: |
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -lc "pacman --version"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -lc "pacman -Qkv"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -lc "pacman -Qkk || true"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -lc "pacman -Syy"
-          C:\msys2-install-test\msys64\usr\bin\bash.exe -lc "pacman -S --noconfirm git"
-
   upload-nightly:
     permissions:
       contents: write
     needs:
-      # - test-docker-sfx
       - test-installer
-      # - test-sfx
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3

@@ -2,8 +2,8 @@
 
 set -e
 
-_spinal_version="1.9.3"
-_scala_version="2.11"
+_spinal_version="$2"
+_scala_version="$1"
 _yosys_major_version="0.31"
 _verilator_version="4.228-1"
 _sbt_version="1.6.0"
@@ -18,7 +18,6 @@ _dateqif=$(date +'%Y-%m-%d')
 _version="${_date}"
 _newmsysbase="${_build}/newmsys"
 _newmsys="${_newmsysbase}/msys64"
-_tagname="$1"
 _yosys_version="${_yosys_major_version}-1"
 
 if [ "$MINGW_PACKAGE_PREFIX" = "mingw-w64-i686" ]; then
@@ -175,7 +174,7 @@ create_installer() {
       -p "${_ifwroot}/packages" \
       -c "${_ifwroot}/config/config.xml" \
       --offline-only \
-      "${_thisdir}/msys2-x86_64-${_date}.exe" \
+      "${_thisdir}/msys2-x86_64-${_scala_version}-${_spinal_version}.exe" \
       -v
   popd > /dev/null
 }
