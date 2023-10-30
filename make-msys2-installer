@@ -129,25 +129,23 @@ install_coursier(){
 }
 
 setup_sbt(){
-  export PATH="$PATH:${_newmsys}/coursier"
-  alias coursier=cs.bat
+  export COURSIER="${_newmsys}/coursier/cs.bat"
   export SBT_OPTS="-Dsbt.version=1.8.0 -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=1.8.0 -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 
-  coursier install scala:2.12.17
-  coursier fetch org.scala-sbt:compiler-bridge_${_scala_version}:1.8.0
-  coursier fetch jline:jline:2.14.6
-  coursier fetch jline:jline:2.14.3
-  coursier fetch --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
+  ${COURSIER} install scala:2.12.17
+  ${COURSIER} fetch org.scala-sbt:compiler-bridge_${_scala_version}:1.8.0
+  ${COURSIER} fetch jline:jline:2.14.6
+  ${COURSIER} fetch jline:jline:2.14.3
+  ${COURSIER} fetch --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
 }
 
 install_spinalhdl_dependencies(){
-  export PATH="$PATH:${_newmsys}/coursier"
-  alias coursier=cs.bat
-  coursier fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
-  coursier fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
-  coursier fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}
-  coursier fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
+  # export COURSIER="${_newmsys}/coursier/cs.bat"
+  ${COURSIER} fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
+  ${COURSIER} fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
+  ${COURSIER} fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}
+  ${COURSIER} fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
 }
 
 install_spinalhdl(){
