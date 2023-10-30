@@ -132,7 +132,7 @@ install_spinalhdl_dependencies(){
   if [ ${_small_version} == ${_spinal_with_tester} ]; then
     ${COURSIER} fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
   else
-    ${COURSIER} fetch cs fetch org.scalatest:scalatest_${_scala_version}:3.2.5
+    ${COURSIER} fetch org.scalatest:scalatest_${_scala_version}:3.2.5
   fi
 }
 
