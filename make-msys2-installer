@@ -120,7 +120,6 @@ install_coursier(){
   export COURSIER_CACHE=${_newmsys}/cache/.coursier
   echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc  
   export COURSIER_HOME=${_newmsys}/coursier
-  export PATH="$PATH:${_newmsys}/coursier"
   echo "export PATH=\"$PATH:/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
   echo "alias coursier=cs.bat" >> ${_newmsys}/etc/skel/.bashrc
 
@@ -130,6 +129,7 @@ install_coursier(){
 }
 
 setup_sbt(){
+  export PATH="$PATH:${_newmsys}/coursier"
   alias coursier=cs.bat
   export SBT_OPTS="-Dsbt.version=1.8.0 -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=1.8.0 -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
@@ -142,6 +142,7 @@ setup_sbt(){
 }
 
 install_spinalhdl_dependencies(){
+  export PATH="$PATH:${_newmsys}/coursier"
   alias coursier=cs.bat
   coursier fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
   coursier fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
