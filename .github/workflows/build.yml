@@ -126,7 +126,7 @@ jobs:
           tag: ${{ steps.set_tag.outputs.tag_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
-          body: ${{ github.event.head_commit.message }}          
+          generateReleaseNotes: true
           artifacts: "msys2-*"
           
 
@@ -137,6 +137,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ${{ github.event.head_commit.message }}
+          generateReleaseNotes: true
           artifacts: |
             msys2-*
