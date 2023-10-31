@@ -98,7 +98,7 @@ jobs:
           set MSYS2_PATH_TYPE=inherit
           set MSYSTEM=MINGW64
           set CHERE_INVOKING=yes
-          C:\msys2-install-test\usr\bin\bash.exe -lc "test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}"
+          C:\msys2-install-test\usr\bin\bash.exe -lc "sh test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}"
 
       - name: Uninstall
         run: |
