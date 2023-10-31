@@ -59,7 +59,6 @@ jobs:
           path: msys2-*
 
   test-installer:
-    name: installer-${{ matrix.image }}
     runs-on: windows-${{ matrix.image }}
     needs: build-installer
     strategy:
