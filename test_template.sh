@@ -8,12 +8,16 @@ else
 fi
 _spinal_version=$2
 
-git clone https://github.com/SpinalHDL/SpinalTemplateSbt.git
-cd SpinalTemplateSbt
-git submodule update --init --recursive
+do_test(){
+    git clone https://github.com/SpinalHDL/SpinalTemplateSbt.git
+    cd SpinalTemplateSbt
+    git submodule update --init --recursive
 
-sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
-sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_version}\"/" build.sbt
+    sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
+    sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_version}\"/" build.sbt
 
-sbt compile
-sbt test
+    sbt compile
+    sbt test
+}
+
+do_test
