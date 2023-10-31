@@ -90,12 +90,16 @@ jobs:
           C:\msys2-install-test\usr\bin\pacman.exe -Syy
           C:\msys2-install-test\usr\bin\pacman.exe --noconfirm -S vim
 
-      - name: Test
+      - name: Test pacman
         run: |
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman --version"
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman -Qkv"
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman -Syy"
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman --noconfirm -S git"
+
+      - name: Test
+        run: |
+          C:\msys2-install-test\mingw64.exe bash test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}
 
       - name: Uninstall
         run: |
