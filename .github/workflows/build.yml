@@ -93,8 +93,12 @@ jobs:
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman --noconfirm -S git"
 
       - name: Test
+        shell: cmd
         run: |
-          C:\msys2-install-test\mingw64.exe bash test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}
+          set MSYS2_PATH_TYPE=inherit
+          set MSYSTEM=MINGW64
+          set CHERE_INVOKING=yes
+          C:\msys2-install-test\usr\bin\bash.exe -lc "test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}"
 
       - name: Uninstall
         run: |
