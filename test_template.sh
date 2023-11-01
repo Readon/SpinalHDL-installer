@@ -17,8 +17,8 @@ do_test(){
     sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
     sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_version}\"/" build.sbt
 
-    sbt compile
-    sbt test
+    sbt -Dsbt.offline=true compile
+    sbt -Dsbt.offline=true test
 }
 
 do_test
