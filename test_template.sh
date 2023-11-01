@@ -10,7 +10,7 @@ fi
 _spinal_version=$2
 
 _sbt_version="1.8.0"
-_newmsys="/e/msys2-install-test"
+_newmsys="/c/msys2-install-test"
 do_test(){    
     export SDKMAN_DIR=${_newmsys}/sdkman
     source $SDKMAN_DIR/bin/sdkman-init.sh
