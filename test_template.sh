@@ -2,7 +2,8 @@
 _scala_version="$1"
 _spinal_version="$2"
 
-source get_versions.sh
+_dir=$(dirname $0)
+source ${_dir}/get_versions.sh
 _index="${_scala_version}-${_spinal_version}"
 _scala_full_version=${full_scala_versions[${_index}]}
 
