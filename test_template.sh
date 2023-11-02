@@ -26,6 +26,7 @@ do_test(){
     sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_version}\"/" build.sbt
 
     ${SBT_CMD} -Dsbt.offline=true compile
+    ${SBT_CMD} -Dsbt.offline=true run
     ${SBT_CMD} -Dsbt.offline=true test
 }
 
