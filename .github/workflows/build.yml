@@ -98,7 +98,6 @@ jobs:
           set MSYSTEM=MINGW64
           set CHERE_INVOKING=yes
           C:\msys2-install-test\usr\bin\bash.exe -lc "sh test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}"
-          C:\msys2-install-test\usr\bin\bash.exe -lc "which java; echo $COURSIER_CACHE"
 
       - name: Uninstall
         run: |
