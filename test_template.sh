@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
+_scala_version="$1"
+_spinal_version="$2"
 
-if [ "$1" == "2.13" ]; then
-    _scala_version="2.13.6"
-elif [ "$1" == "2.12" ]; then
-    _scala_version="2.12.13"
-else
-    _scala_version="2.11.12"
-fi
-_spinal_version=$2
+source get_versions.sh
+_index="${_scala_version}-${_spinal_version}"
+_scala_full_version=${full_scala_versions[${_index}]}
 
 _sbt_version="1.8.0"
 _newmsys="/c/msys2-install-test"
@@ -23,11 +20,14 @@ do_test(){
     git submodule update --init --recursive
 
     sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
-    sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_version}\"/" build.sbt
+    sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_full_version}\"/" build.sbt
 
-    ${SBT_CMD} -Dsbt.offline=true compile
-    ${SBT_CMD} -Dsbt.offline=true run
-    ${SBT_CMD} -Dsbt.offline=true test
+    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVerilog" || exit
+    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVhdl" || exit
+    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelSim" || exit
+    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelFormal" || exit
+
+    cd ..
 }
 
 do_test

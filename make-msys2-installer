@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 set -e
+source get_versions.sh
 
 _spinal_version="$2"
 _scala_version="$1"
-_yosys_major_version="0.31"
+_scala_full_version=${full_scala_versions["${_scala_version}-${_spinal_version}"]}
+
 _verilator_version="4.228-1"
-_sbt_version="1.8.0"
-_java_version="17.0.8.1-tem"
 
 _srcdir="$(pwd)"
 _thisdir="$( cd "$( dirname "$0" )" && pwd )"
