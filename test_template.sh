@@ -23,10 +23,12 @@ do_test(){
     sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
     sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_full_version}\"/" build.sbt
 
+    ${SBT_CMD} -Dsbt.offline=true "compile" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVerilog" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVhdl" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelSim" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelFormal" || exit
+    ${SBT_CMD} -Dsbt.offline=true "test" || exit
 
     cd ..
 }
