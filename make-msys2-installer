@@ -141,7 +141,7 @@ install_spinalhdl_dependencies(){
   fi
   
   export _small_version=$(echo -e "${_spinal_version}\n${_spinal_version_with_xml_error}" | sort -V | head -n 1)
-  if [ ${_small_version} == ${_spinal_version_with_xml_error} ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
+  if [ ${_small_version} != ${_spinal_version_with_xml_error} ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
     ${COURSIER} install scala:${_scala_version_without_xml_error}
   fi
 }
