@@ -121,10 +121,14 @@ setup_sbt(){
   ${COURSIER} fetch --sources org.scala-sbt:compiler-bridge_${_scala_version}:1.8.0
   ${COURSIER} fetch jline:jline:2.14.6
   ${COURSIER} fetch jline:jline:2.14.3
+  ${COURSIER} fetch org.fusesource.jansi:jansi:1.12
   ${COURSIER} fetch --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
 }
 
 _spinal_with_tester="1.8.0"
+_scala_version_with_xml_error="2.12"
+_spinal_version_with_xml_error="1.9.3"
+_scala_version_without_xml_error="2.12.18"
 install_spinalhdl_dependencies(){
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
@@ -134,6 +138,11 @@ install_spinalhdl_dependencies(){
     ${COURSIER} fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
   else
     ${COURSIER} fetch org.scalatest:scalatest_${_scala_version}:3.2.5
+  fi
+  
+  export _small_version=$(echo -e "${_spinal_version}\n${_spinal_version_with_xml_error}" | sort -V | head -n 1)
+  if [ ${_small_version} == ${_spinal_version_with_xml_error} ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
+    ${COURSIER} install scala:${_scala_version_without_xml_error}
   fi
 }
 
