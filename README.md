@@ -57,4 +57,5 @@ create issue, or clone this repos and modify yourself.
 ### Scala XML conflict.
 Version of SpinalHDL below 1.9.3 could not work with scala 2.12.13 as [#1229](https://github.com/SpinalHDL/SpinalHDL/issues/1229) states.
 It will trigger version confilict. Until 1.9.4 the SpinalHDL upgrade scala compiler to 2.12.18, it will works.
-So if your project is using scala 2.12.18 then it can works. However, you need to download the scala 2.12.18 by yourself, with internet.
+So we installed scala 2.12.18 in this case.
+Use scala version 2.12.18 in your project.
