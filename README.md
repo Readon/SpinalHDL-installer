@@ -51,3 +51,10 @@ The java environment is install through [sdkman](https://sdkman.io/) which helps
 ### What if I want to use an old version SpinalHDL?
 
 create issue, or clone this repos and modify yourself.
+
+## Known issues
+
+### Scala XML conflict.
+Version of SpinalHDL below 1.9.3 could not work with scala 2.12.13 as [#1229](https://github.com/SpinalHDL/SpinalHDL/issues/1229) states.
+It will trigger version confilict. Until 1.9.4 the SpinalHDL upgrade scala compiler to 2.12.18, it will works.
+So if your project is using scala 2.12.18 then it can works. However, you need to download the scala 2.12.18 by yourself, with internet.
