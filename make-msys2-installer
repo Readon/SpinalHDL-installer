@@ -132,16 +132,12 @@ _scala_version_without_xml_error="2.12.18"
 install_spinalhdl_dependencies(){
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-core_${_scala_version}:${_spinal_version}
   ${COURSIER} fetch com.github.spinalhdl:spinalhdl-lib_${_scala_version}:${_spinal_version}
-  ${COURSIER} fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}
-  export _small_version=$(echo -e "${_spinal_version}\n${_spinal_with_tester}" | sort -V | head -n 1)
-  if [ ${_small_version} == ${_spinal_with_tester} ]; then
+  ${COURSIER} fetch com.github.spinalhdl:spinalhdl-sim_${_scala_version}:${_spinal_version}  
+  if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_with_tester}) == "false" ]; then
     ${COURSIER} fetch com.github.spinalhdl:spinalhdl-tester_${_scala_version}:${_spinal_version}
-  else
-    ${COURSIER} fetch org.scalatest:scalatest_${_scala_version}:3.2.5
   fi
   
-  export _small_version=$(echo -e "${_spinal_version}\n${_spinal_version_with_xml_error}" | sort -V | head -n 1)
-  if [ ${_small_version} != ${_spinal_version_with_xml_error} ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
+  if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_version_with_xml_error}) == "true" ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
     ${COURSIER} install scala:${_scala_version_without_xml_error}
   fi
 }

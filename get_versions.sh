@@ -19,3 +19,14 @@ _sbt_version="1.8.0"
 _java_version="17.0.8.1-tem"
 
 _yosys_major_version="0.31"
+
+is_version_smaller_eq() {
+    arg1=$1
+    arg2=$2
+    small_one=$(echo -e "${arg1}\n${arg2}" | sort -V | head -n 1)
+    if [ $small_one == $arg1 ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
