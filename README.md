@@ -52,6 +52,10 @@ The java environment is install through [sdkman](https://sdkman.io/) which helps
 
 create issue, or clone this repos and modify yourself.
 
+### Why the distribution still use verilator version 4.228
+
+This is the only stable version until now, use version 5 (until 5.016) would meet a bundle of problems.
+
 ## Known issues
 
 ### Scala XML conflict.
