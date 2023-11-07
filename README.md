@@ -56,6 +56,17 @@ create issue, or clone this repos and modify yourself.
 
 This is the only stable version until now, use version 5 (until 5.016) would meet a bundle of problems.
 
+### What can I do if version conflict happens on scala-xml
+
+By chances, compiling your project would report below, or other more. Then scala test in version 3.2.14 and scala in version 2.12.18 are prefered.
+``` bash
+(update) found version conflict(s) in library dependencies; some are suspected to be binary incompatible:
+[error]
+[error]         * org.scala-lang.modules:scala-xml_2.12:2.1.0 (early-semver) is selected over 1.0.6
+[error]             +- org.scalatest:scalatest-core_2.12:3.2.14           (depends on 2.1.0)
+[error]             +- org.scala-lang:scala-compiler:2.12.16              (depends on 1.0.6)
+```
+
 ## Known issues
 
 ### Scala XML conflict.
