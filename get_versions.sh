@@ -4,7 +4,7 @@ full_scala_versions["2.12-1.6.4"]="2.12.13"
 full_scala_versions["2.13-1.6.4"]="2.13.6"
 
 full_scala_versions["2.11-1.7.3a"]="2.11.12"
-full_scala_versions["2.12-1.7.3a"]="2.12.13"
+full_scala_versions["2.12-1.7.3a"]="2.12.18"
 full_scala_versions["2.13-1.7.3a"]="2.13.6"
 
 full_scala_versions["2.11-1.8.2"]="2.11.12"
