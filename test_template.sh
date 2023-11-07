@@ -8,6 +8,7 @@ _index="${_scala_version}-${_spinal_version}"
 _scala_full_version=${full_scala_versions[${_index}]}
 
 _sbt_version="1.8.0"
+_spinal_with_wrong_scalatest_version="1.8.0"
 _newmsys="/c/msys2-install-test"
 do_test(){    
     export SDKMAN_DIR=${_newmsys}/sdkman
@@ -22,6 +23,11 @@ do_test(){
 
     sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
     sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_full_version}\"/" build.sbt
+    if [ is_version_smaller_eq ${_spinal_version} ${_spinal_with_wrong_scalatest_version} ]; then
+      sed -i '/spinalIdslPlugin =/a\
+val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"' build.sbt
+      sed -i 's/\(, spinalIdslPlugin\)/\1, scalaTest/' build.sbt
+    fi    
 
     ${SBT_CMD} -Dsbt.offline=true "compile" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVerilog" || exit
