@@ -23,7 +23,7 @@ do_test(){
 
     sed -i "s/\(val spinalVersion = \)\(\".*\"\)/\1\"${_spinal_version}\"/" build.sbt
     sed -i "s/\(scalaVersion := \)\(\".*\"\)/\1\"${_scala_full_version}\"/" build.sbt
-    if [ is_version_smaller_eq ${_spinal_version} ${_spinal_with_wrong_scalatest_version} ]; then
+    if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_with_wrong_scalatest_version}) == "true" ]; then
       sed -i '/spinalIdslPlugin =/a\
 val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"' build.sbt
       sed -i 's/\(, spinalIdslPlugin\)/\1, scalaTest/' build.sbt
