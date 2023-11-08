@@ -9,6 +9,7 @@ _scala_full_version=${full_scala_versions[${_index}]}
 
 _sbt_version="1.8.0"
 _spinal_with_wrong_scalatest_version="1.8.0"
+_spinal_without_formal_version="1.6.4"
 _newmsys="/c/msys2-install-test"
 do_test(){    
     export SDKMAN_DIR=${_newmsys}/sdkman
@@ -28,6 +29,9 @@ do_test(){
 val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"' build.sbt
       sed -i 's/\(, spinalIdslPlugin\)/\1, scalaTest/' build.sbt
     fi    
+    if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_without_formal_version}) == "true" ]; then
+      rm "hw\spinal\projectname\MyTopLevelFormal.scala"
+    fi
 
     ${SBT_CMD} -Dsbt.offline=true "compile" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVerilog" || exit
