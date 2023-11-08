@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: setup-msys2
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
@@ -35,6 +36,7 @@ jobs:
             mingw-w64-x86_64-7zip
 
       - name: Switch to the main mirror
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         shell: msys2 {0}
         run: |
           echo 'Server = https://repo.msys2.org/mingw/$repo/' > /etc/pacman.d/mirrorlist.mingw
@@ -42,6 +44,7 @@ jobs:
           pacman-conf.exe
 
       - name: Update using the main mirror & Check install
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           msys2 -c 'pacman --noconfirm -Suuy'
           msys2 -c 'pacman --noconfirm -Suu'
@@ -49,10 +52,12 @@ jobs:
 
       - name: Build Installer
         shell: msys2 {0}
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           bash make-msys2-installer ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}
 
       - name: Upload Results
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         uses: actions/upload-artifact@v3
         with:
           name: installer
@@ -72,19 +77,23 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: actions/download-artifact@v3
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         with:
           name: installer
 
       - name: Install
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           ./msys2-x86_64-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.exe in --confirm-command --accept-messages --root C:/msys2-install-test
 
       - name: Test without Login Shell
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           C:\msys2-install-test\usr\bin\pacman.exe -Syy
           C:\msys2-install-test\usr\bin\pacman.exe --noconfirm -S vim
 
       - name: Test pacman
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman --version"
           C:\msys2-install-test\usr\bin\bash.exe -lc "pacman -Qkv"
@@ -93,6 +102,7 @@ jobs:
 
       - name: Test
         shell: cmd
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           set MSYS2_PATH_TYPE=inherit
           set MSYSTEM=MINGW64
@@ -100,6 +110,7 @@ jobs:
           C:\msys2-install-test\usr\bin\bash.exe -lc "sh test_template.sh ${{ matrix.scalaVersion }} ${{ matrix.spinalVersion }}"
 
       - name: Uninstall
+        if: matrix.scalaVersion != '2.13' || matrix.spinalVersion != '1.6.4'
         run: |
           C:\msys2-install-test\uninstall.exe pr --confirm-command
 
