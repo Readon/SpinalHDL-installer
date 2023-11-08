@@ -28,7 +28,7 @@ do_test(){
       sed -i '/spinalIdslPlugin =/a\
 val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"' build.sbt
       sed -i 's/\(, spinalIdslPlugin\)/\1, scalaTest/' build.sbt
-    fi    
+    fi
     if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_without_formal_version}) == "true" ]; then
       rm "hw\spinal\projectname\MyTopLevelFormal.scala"
     fi
@@ -36,8 +36,10 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"' build.sbt
     ${SBT_CMD} -Dsbt.offline=true "compile" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVerilog" || exit
     ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelVhdl" || exit
-    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelSim" || exit
-    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelFormal" || exit
+    ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelSim" || exit    
+    if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_without_formal_version}) == "false" ]; then
+      ${SBT_CMD} -Dsbt.offline=true "runMain projectname.MyTopLevelFormal" || exit
+    fi
     ${SBT_CMD} -Dsbt.offline=true "test" || exit
 
     cd ..
