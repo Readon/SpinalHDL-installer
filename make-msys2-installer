@@ -106,6 +106,7 @@ install_coursier(){
   export COURSIER_CACHE=${_newmsys}/cache/.coursier
   echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc  
   export COURSIER_HOME=${_newmsys}/coursier
+  export COURSIER_BIN_DIR=${_newmsys}/coursier
   echo "export PATH=\"\$PATH:/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
   echo "alias coursier=cs.bat" >> ${_newmsys}/etc/skel/.bashrc
 
@@ -124,6 +125,9 @@ setup_sbt(){
   ${COURSIER} fetch jline:jline:2.14.3
   ${COURSIER} fetch org.fusesource.jansi:jansi:1.12
   ${COURSIER} fetch --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
+  
+  echo "alias mill=mill.bat" >> ${_newmsys}/etc/skel/.bashrc
+  ${COURSIER} install mill
 }
 
 _spinal_with_tester="1.8.0"
