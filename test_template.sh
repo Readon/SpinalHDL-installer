@@ -17,6 +17,7 @@ do_test(){
     export COURSIER_CACHE=${_newmsys}/cache/.coursier
     export SBT_OPTS="-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
     export SBT_CMD="${SDKMAN_DIR}/candidates/sbt/current/bin/sbt ${SBT_OPTS}"
+    export MILL_CMD="${_newmsys}/coursier/mill.bat"
 
     git clone https://github.com/SpinalHDL/SpinalTemplateSbt.git
     cd SpinalTemplateSbt || exit
@@ -42,6 +43,7 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"' build.sbt
     fi
     ${SBT_CMD} -Dsbt.offline=true "test" || exit
 
+    ${MILL_CMD} _.compile || exit
     cd ..
 }
 
