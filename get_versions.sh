@@ -23,6 +23,10 @@ full_scala_versions["2.11-1.10.1"]="2.11.12"
 full_scala_versions["2.12-1.10.1"]="2.12.18"
 full_scala_versions["2.13-1.10.1"]="2.13.12"
 
+full_scala_versions["2.11-1.10.2"]="2.11.12"
+full_scala_versions["2.12-1.10.2"]="2.12.18"
+full_scala_versions["2.13-1.10.2"]="2.13.12"
+
 _sbt_version="1.8.0"
 _java_version="17.0.8.1-tem"
 
