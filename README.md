@@ -33,6 +33,7 @@ Installing the self extracting archive to `C:\msys64`:
 
 The interference could lead a mess up environment variable management. 
 Start a console from any of your favourite terminal by `msys2_shell.cmd -defterm -no-start -mingw64` can start a standalone environment.
+> Note: Only MINGW64 environment is supported.
 
 ### What's the difference between the installer and the archives?
 
@@ -65,6 +66,12 @@ By chances, compiling your project would report below, or other more. Then scala
 [error]         * org.scala-lang.modules:scala-xml_2.12:2.1.0 (early-semver) is selected over 1.0.6
 [error]             +- org.scalatest:scalatest-core_2.12:3.2.14           (depends on 2.1.0)
 [error]             +- org.scala-lang:scala-compiler:2.12.16              (depends on 1.0.6)
+```
+
+### fatal error: boost/interprocess/managed shared memory.hpp: No such file or directory
+Some releases before 0.9.5 would meet error while simulating with iverilog, which report this error. use the command below can solve it.
+``` bash
+pacman -S mingw-w64-x86_64-boost
 ```
 
 ## Known issues
