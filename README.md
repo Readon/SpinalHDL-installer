@@ -1,65 +1,59 @@
-# MSYS2 Installer
+# [English Version](README_en.md)
 
 This project is to make a installer to helping on setup a working msys2 environment for developping SpinalHDL design, in one step, offline.
-The installer in the (release)[https://github.com/Readon/msys2-installer/releases] directory of this repos contains separate versions of the SpinalHDL jar file, released with the same version number as the version of the SpinalHDL libraries contained therein.
 
-> Note: the installed sbt runtime version is 1.8.0. I add an option to SBT_OPTS to fixs this, it would override your project's sbt.version which is normally specified in project/build.properties file.
+# 基于 MSYS2 的 SpinalHDL 环境安装器
+
+本项目旨在制作一个安装程序，以帮助一步到位地安装(离线)用于开发 SpinalHDL 设计的 msys2 工作环境。
+本 repos 的 (release)[https://github.com/Readon/msys2-installer/releases] 目录中的安装程序包含不同版本的 SpinalHDL jar 文件，发布的安装文件版本号与其中包含的 SpinalHDL 库的版本号相同。
+
+> 注意：安装的 sbt 运行时版本为 1.8.0。安装包已在环境变量 SBT_OPTS 中添加了一个选项来解决这个问题，它将覆盖在 project/build.properties 文件中指定的项目 sbt.version 版本。
 
 ![screenshot](screenshot.png)
 
-## CLI Usage examples
+## CLI 使用案例
 
-Installing the GUI installer via the CLI to `C:\msys64`:
+通过 CLI 启动 GUI 安装程序将系统安装到 `C:\msys64`：
 
 ```powershell
 .\msys2-x86_64-latest.exe in --confirm-command --accept-messages --root C:/msys64
 ```
 
-Uninstalling an existing installation in `C:\msys64` via the CLI:
+通过 CLI 卸载已安装在 `C:\msys64` 中的系统：
 
 ```powershell
 C:\msys64\uninstall.exe pr --confirm-command
 ```
 
-Installing the self extracting archive to `C:\msys64`:
-
-```powershell
-.\msys2-base-x86_64-latest.sfx.exe -y -oC:\
-```
-
 ## FAQ
 
-### How can I seperate the msys2 environment from Windows?
+### 如何将 MSYS2 环境与 Windows 环境分开？
 
-The interference could lead a mess up environment variable management. 
-Start a console from any of your favourite terminal by `msys2_shell.cmd -defterm -no-start -mingw64` can start a standalone environment.
-> Note: Only MINGW64 environment is supported.
+两个环境相互干扰会导致环境变量的混乱。
+通过 `msys2_shell.cmd -defterm -no-start -mingw64` 从任何你喜欢的终端启动 MINGW64 控制台都可以启动独立的 MSYS2 环境（与Windows环境隔离的）。
 
-### What's the difference between the installer and the archives?
+> 注意: 本安装包仅支持 MSYS2 中的 MINGW64 环境，MINGW32，UCRT 等均无法使用.
 
-The installer provides some additional features such as installing shortcuts, registering an uninstaller, a GUI for selecting the installation path and automatically running a login shell at the end to initialize the MSYS2 environment.
+### 在本安装器中包含了哪些包？
 
-If you unpack the archives and run a login shell once, you will get a functionally equivalent MSYS2 installation.
+它包含 [base](https://packages.msys2.org/package/base) 软件包、SpinalHDL 运行和调试所需的其他软件包及其所有依赖包。您可以使用以下方法列出所包含的软件包：`pactree base -lu | sort`.
 
-### What is contained in the installer/archives?
+### 为什么要通过 sdkman 安装 jdk？
 
-It contains the [base](https://packages.msys2.org/package/base) package with others required packages by SpinalHDL runing and debugging, and all their dependencies. You can list the contained packages using: `pactree base -lu | sort`
+Java 环境是通过 [sdkman](https://sdkman.io/) 安装的，这有助于提供一个独立于 Windows 主机的环境。这样就可以支持便携式安装。Java 和 sbt 全部由 sdkman 管理，位于独立的目录 `/sdkman` 下。另一方面，jar 缓存文件安装在 `/cache`，这样我们就可以离线使用安装程序。所需的环境变量均已配置完成。
 
-### Why install jdk through sdkman?
+### 如果想使用旧版本的 SpinalHDL 怎么办？
 
-The java environment is install through [sdkman](https://sdkman.io/) which helps to provide a standalone environment seperate from host Windows. So that portable using is possible. Java and sbt are all managed by sdkman in it's own directory `/sdkman`. On other way, jar cache file is installed in `/cache` so that we can use the installer offline.
+创建issue，或者克隆此仓库然后自己修改。
 
-### What if I want to use an old version SpinalHDL?
+### 为什么该发行版仍在使用 verilator 4.228 版？
 
-create issue, or clone this repos and modify yourself.
+这是迄今为止唯一稳定的版本，使用第 5 版（直到 5.016）会遇到很多问题。
 
-### Why the distribution still use verilator version 4.228
+### 如果 scala-xml 发生版本冲突，我该怎么办？
 
-This is the only stable version until now, use version 5 (until 5.016) would meet a bundle of problems.
+有一些情况下，编译 SpinalHDL 项目时可能会出现以下或其他更多报告。那么最好设置你的 SpinalHDL 工程使用 3.2.14 版的 scala test 和 2.12.18 版的 scala。
 
-### What can I do if version conflict happens on scala-xml
-
-By chances, compiling your project would report below, or other more. Then scala test in version 3.2.14 and scala in version 2.12.18 are prefered.
 ``` bash
 (update) found version conflict(s) in library dependencies; some are suspected to be binary incompatible:
 [error]
@@ -69,15 +63,17 @@ By chances, compiling your project would report below, or other more. Then scala
 ```
 
 ### fatal error: boost/interprocess/managed shared memory.hpp: No such file or directory
-Some releases before 0.9.5 would meet error while simulating with iverilog, which report this error. use the command below can solve it.
+
+在本项目发布的 0.9.5 之前的某些版本中，使用 iverilog 仿真时会出错，并报告错误。可使用以下命令解决。
+
 ``` bash
 pacman -S mingw-w64-x86_64-boost
 ```
 
-## Known issues
+## 已知问题
 
-### Scala XML conflict.
-Version of SpinalHDL below 1.9.3 could not work with scala 2.12.13 as [#1229](https://github.com/SpinalHDL/SpinalHDL/issues/1229) states.
-It will trigger version confilict. Until 1.9.4 the SpinalHDL upgrade scala compiler to 2.12.18, it will works.
-So we installed scala 2.12.18 in this case.
-Use scala version 2.12.18 in your project.
+### Scala XML 冲突.
+
+当使用的 SpinalHDL 版本低于1.9.3，且使用 Scala 2.12.13 编译器时，该环境无法正常工作，就像issue [#1229](https://github.com/SpinalHDL/SpinalHDL/issues/1229) 中指出的那样，程序将触发版本冲突。直到SpinalHDL 1.9.4 Scala编译器升级到了 2.12.18，它才会正常工作。
+
+所以在这种情况下，请安装 Scala 2.12.18。在项目中明确使用 Scala 版本 2.12.18。
