@@ -64,7 +64,8 @@ clean_tmp_dir(){
 }
 
 install_versioned_packages(){
-  echo "export VERILATOR_ROOT=/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export INSTALL_ROOT=$(cygpath -w /)" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export VERILATOR_ROOT=\${INSTALL_ROOT}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
   for pkg_file in ${_versioned_packages_url}; do
       if [ ! -f "${pkg_file}" ]; then
@@ -95,7 +96,7 @@ install_sdkman(){
   sdk install java $_java_version
   sdk install sbt $_sbt_version
   export SBT_OPTS="-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
-  echo "export SBT_OPTS=\"-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=/cache/.sbt/boot -Dsbt.global.base=/cache/.sbt/1.0 -Dsbt.ivy.home=/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export SBT_OPTS=\"-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=\${INSTALL_ROOT}/cache/.sbt/boot -Dsbt.global.base=\${INSTALL_ROOT}/cache/.sbt/1.0 -Dsbt.ivy.home=\${INSTALL_ROOT}/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 }
 
 install_dependencies(){
@@ -105,10 +106,10 @@ install_dependencies(){
 
 install_coursier(){
   export COURSIER_CACHE=${_newmsys}/cache/.coursier
-  echo "export COURSIER_CACHE=/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc  
+  echo "export COURSIER_CACHE=\${INSTALL_ROOT}/cache/.coursier" >> ${_newmsys}/etc/skel/.bashrc  
   export COURSIER_HOME=${_newmsys}/coursier
   export COURSIER_BIN_DIR=${_newmsys}/coursier
-  echo "export PATH=\"\$PATH:/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export PATH=\"\$PATH:\${INSTALL_ROOT}/coursier\"" >> ${_newmsys}/etc/skel/.bashrc
   echo "alias coursier=cs.bat" >> ${_newmsys}/etc/skel/.bashrc
 
   wget "https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-win32.zip"
