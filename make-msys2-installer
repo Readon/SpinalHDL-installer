@@ -64,7 +64,7 @@ clean_tmp_dir(){
 }
 
 install_versioned_packages(){
-  echo "export INSTALL_ROOT=\$(cygpath -w /)" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export INSTALL_ROOT=\$(cygpath -w / | sed 's,[/\\]$,,')" >> ${_newmsys}/etc/skel/.bashrc
   echo "export VERILATOR_ROOT=\${INSTALL_ROOT}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
   for pkg_file in ${_versioned_packages_url}; do
