@@ -42,6 +42,16 @@ C:\msys64\uninstall.exe pr --confirm-command
 
 Java 环境是通过 [sdkman](https://sdkman.io/) 安装的，这有助于提供一个独立于 Windows 主机的环境。这样就可以支持便携式安装。Java 和 sbt 全部由 sdkman 管理，位于独立的目录 `/sdkman` 下。另一方面，jar 缓存文件安装在 `/cache`，这样我们就可以离线使用安装程序。所需的环境变量均已配置完成。
 
+### IDE（VSCode、IDEA等）集成
+
+在未启动目标IDE的情况下，打开MSYS2自带的MINGW64控制台，在命令行中输入目标IDE的启动执行文件路径，即可启动目标IDE并使用该环境。
+
+### 离线使用方法
+
+本安装包仅包含编译、测试SpinalHDL工程所需的文件，不包含各种IDE及其插件所需文件。
+由于不同人使用的开发环境、IDE版本各不相同，建议在在线机上安装该包，并启动编译、测试你的工程后，将安装目录复制到离线机使用。
+> 若需使用镜像下载可参考 [Coursier官方文档](https://get-coursier.io/blog/#mirrors) 。
+
 ### 如果想使用旧版本的 SpinalHDL 怎么办？
 
 创建issue，或者克隆此仓库然后自己修改。

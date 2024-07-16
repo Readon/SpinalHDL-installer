@@ -49,6 +49,16 @@ It contains the [base](https://packages.msys2.org/package/base) package with oth
 
 The java environment is install through [sdkman](https://sdkman.io/) which helps to provide a standalone environment seperate from host Windows. So that portable using is possible. Java and sbt are all managed by sdkman in it's own directory `/sdkman`. On other way, jar cache file is installed in `/cache` so that we can use the installer offline.
 
+### IDE (VSCode, IDEA, etc.) Integration
+
+Without starting the target IDE, open the MSYS2 built-in MINGW64 console and enter the path of the target IDE's startup executable file in the command line to start the target IDE which use this environment.
+
+### Offline Usage Method
+
+This installation package only includes the files required for compiling and testing the SpinalHDL project, and does not include the files needed for various IDEs and their plugins.
+Since different people use different development environments and IDE versions, it is recommended to install this package on an online machine, and after starting the compilation and testing of your project, copy the installation directory to the offline machine.
+> For using mirror downloads, you can refer to the [Coursier official documentation](https://get-coursier.io/blog/#mirrors).
+
 ### What if I want to use an old version SpinalHDL?
 
 create issue, or clone this repos and modify yourself.
