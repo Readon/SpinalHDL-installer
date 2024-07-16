@@ -120,13 +120,32 @@ install_coursier(){
   export COURSIER="${COURSIER_HOME}/cs.bat"
 }
 
+fix_coursier_path() {
+  COURSIER_MAVEN=${COURSIER_CACHE}/https/repo1.maven.org/maven2
+  ORG_DIR=$(echo $1 | sed 's/\./\//g')
+  PACKAGE_FULL=$2
+  PACKAGE=$(echo $PACKAGE_FULL | sed 's/_.*//')
+  VERSION=$3
+
+  CWD=$(pwd)
+  cd ${COURSIER_MAVEN}/${ORG_DIR}/${PACKAGE_FULL}/${VERSION}/
+  cp ${PACKAGE_FULL}-${VERSION}.jar ${PACKAGE}-${VERSION}.jar
+  # cp ${PACKAGE_FULL}-${VERSION}-sources.jar ${PACKAGE}-${VERSION}-sources.jar
+  cp ${PACKAGE_FULL}-${VERSION}.pom ${PACKAGE}-${VERSION}.pom
+  cd $CWD
+}
+
 _metals_version="1.3.3"
 setup_metals(){
   ${COURSIER} bootstrap org.scalameta:metals_2.13:${_metals_version} -o metals -f
   ${COURSIER} install bloop:1.6.0
   ${COURSIER} fetch ch.epfl.scala:sbt-bloop_${_scala_version}_1.0:1.6.0
+  fix_coursier_path ch.epfl.scala sbt-bloop_${_scala_version}_1.0 "1.6.0"
+  # fix_coursier_path ch.epfl.scala sbt-bloop_${_scala_version}_1.0 "1.6.0" --sources
   ${COURSIER} fetch ch.epfl.scala:bloop-frontend_${_scala_version}:1.6.0
-  ${COURSIER} fetch com.sourchgraph:semanticdb_javac:0.10.0
+  fix_coursier_path ch.epfl.scala bloop-frontend_${_scala_version} "1.6.0"
+  # fix_coursier_path ch.epfl.scala bloop-frontend_${_scala_version} "1.6.0" --sources
+  ${COURSIER} fetch com.sourcegraph:semanticdb-javac:0.10.0
 }
 
 setup_sbt(){
