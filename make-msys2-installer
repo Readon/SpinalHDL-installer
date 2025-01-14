@@ -63,6 +63,7 @@ clean_tmp_dir(){
 }
 
 install_versioned_packages(){
+  echo "Installing packages in specific version."
   echo "export INSTALL_ROOT=\$(cygpath -w / | sed 's,[/\\]$,,')" >> ${_newmsys}/etc/skel/.bashrc
   echo "export VERILATOR_ROOT=\${INSTALL_ROOT}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
@@ -72,7 +73,8 @@ install_versioned_packages(){
       fi
   done
 
-  packages=(${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*)  
+  packages=(${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*)
+  echo ${#packages[@]} ${packages[@]}
   if [ ${#packages[@]} -gt 0 ]; then
     pacman -U --noconfirm --root "${_newmsys}" "${packages[@]}"  
   fi
@@ -80,6 +82,7 @@ install_versioned_packages(){
 }
 
 install_custom_packages(){
+  echo "Installing custom packages."
   _url="https://github.com/Readon/MINGW-SpinalHDL/releases/download/v${_yosys_major_version}"
   prepare_tmp_dir
   for pkg in ${_custom_packages}; do
@@ -88,7 +91,8 @@ install_custom_packages(){
       fi
   done
 
-  packages=(${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*)  
+  packages=(${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*)
+  echo ${#packages[@]} ${packages[@]}
   if [ ${#packages[@]} -gt 0 ]; then
     pacman -U --noconfirm --root "${_newmsys}" "${packages[@]}"  
   fi
