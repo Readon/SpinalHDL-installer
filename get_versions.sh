@@ -34,7 +34,7 @@ full_scala_versions["2.13-1.11.0"]="2.13.12"
 _sbt_version="1.8.0"
 _java_version="17.0.8.1-tem"
 
-_yosys_major_version="0.31"
+_yosys_major_version="0.41"
 
 is_version_smaller_eq() {
     arg1=$1
