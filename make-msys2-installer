@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+shopt -s nullglob
 source get_versions.sh
 
 _spinal_version="$2"
