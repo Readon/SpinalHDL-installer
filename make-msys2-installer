@@ -31,11 +31,10 @@ fi
 _custom_packages="
 ${MINGW_PACKAGE_PREFIX}-yosys-${_yosys_version}-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-python-sby-${_yosys_version}-any.pkg.tar.zst
+${MINGW_PACKAGE_PREFIX}-verilator-${_verilator_version}-any.pkg.tar.zst
 "
 
-_versioned_packages_url="
-https://mirror.msys2.org/mingw/${msystem}/${MINGW_PACKAGE_PREFIX}-verilator-${_verilator_version}-any.pkg.tar.zst
-"
+_versioned_packages_url=""
 
 _packages=$(cat << EOF
   git
