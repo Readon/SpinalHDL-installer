@@ -71,7 +71,11 @@ install_versioned_packages(){
         wget "${pkg_file}"
       fi
   done
-  pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*  
+
+  packages=(${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*)  
+  if [ ${#packages[@]} -gt 0 ]; then
+    pacman -U --noconfirm --root "${_newmsys}" "${packages[@]}"  
+  fi
   clean_tmp_dir
 }
 
@@ -83,7 +87,11 @@ install_custom_packages(){
         wget "${_url}/${pkg}"
       fi
   done
-  pacman -U --noconfirm --root "${_newmsys}" ${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*
+
+  packages=(${MINGW_PACKAGE_PREFIX}-*-any.pkg.tar.*)  
+  if [ ${#packages[@]} -gt 0 ]; then
+    pacman -U --noconfirm --root "${_newmsys}" "${packages[@]}"  
+  fi
   clean_tmp_dir
 }
 
