@@ -134,7 +134,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           generateReleaseNotes: true
-          files:  |
+          artifacts: |
             artifacts/**/*
             artifacts/msys2-checksums.txt
           
@@ -149,6 +149,6 @@ jobs:
           generateReleaseNotes: true
           draft: false
           prerelease: false
-          files: |
+          artifacts: |
             artifacts/**/*
             artifacts/msys2-checksums.txt
