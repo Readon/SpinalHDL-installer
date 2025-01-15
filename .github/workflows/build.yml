@@ -134,7 +134,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           generateReleaseNotes: true
-          files: artifacts/**/*
+          files:  |
+            artifacts/**/*
+            msys2-*
           
 
       - name: Upload Installers with Tag
@@ -147,4 +149,6 @@ jobs:
           generateReleaseNotes: true
           draft: false
           prerelease: false
-          files: artifacts/**/*
+          files: |
+            artifacts/**/*
+            msys2-*
