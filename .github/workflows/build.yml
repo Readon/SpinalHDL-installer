@@ -108,21 +108,16 @@ jobs:
       contents: write
     needs:
       - test-installer
-    strategy:
-      fail-fast: false
-      matrix:
-        scalaVersion: [2.11, 2.12, 2.13]
-        spinalVersion: [1.11.0]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
+          path: artifacts
 
       - name: Create 'latest' Variants and Checksums
         run: |
           sha256sum msys2-*
-          sha256sum msys2-* > msys2-checksums-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.txt
+          sha256sum msys2-* > msys2-checksums.txt
 
       - name: Set Release Tag
         id: set_tag
@@ -139,7 +134,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           generateReleaseNotes: true
-          artifacts: "msys2-*"
+          files: artifacts/**/*
           
 
       - name: Upload Installers with Tag
@@ -150,5 +145,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           generateReleaseNotes: true
-          artifacts: |
-            msys2-*
+          draft: false
+          prerelease: false
+          files: artifacts/**/*
