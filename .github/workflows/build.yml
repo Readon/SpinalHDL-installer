@@ -116,8 +116,8 @@ jobs:
 
       - name: Create 'latest' Variants and Checksums
         run: |
-          sha256sum msys2-*
-          sha256sum msys2-* > msys2-checksums.txt
+          cd artifacts
+          find . -type f -exec sha256sum {} \; > msys2-checksums.txt
 
       - name: Set Release Tag
         id: set_tag
@@ -136,7 +136,7 @@ jobs:
           generateReleaseNotes: true
           files:  |
             artifacts/**/*
-            msys2-*
+            artifacts/msys2-checksums.txt
           
 
       - name: Upload Installers with Tag
@@ -151,4 +151,4 @@ jobs:
           prerelease: false
           files: |
             artifacts/**/*
-            msys2-*
+            artifacts/msys2-checksums.txt
