@@ -55,7 +55,7 @@ jobs:
       - name: Upload Results
         uses: actions/upload-artifact@v4
         with:
-          name: installer
+          name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
           path: msys2-*
 
   test-installer:
@@ -73,7 +73,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: installer
+          name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
 
       - name: Install
         run: |
@@ -108,11 +108,16 @@ jobs:
       contents: write
     needs:
       - test-installer
+    strategy:
+      fail-fast: false
+      matrix:
+        scalaVersion: [2.11, 2.12, 2.13]
+        spinalVersion: [1.11.0]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: installer
+          name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
 
       - name: Create 'latest' Variants and Checksums
         run: |
