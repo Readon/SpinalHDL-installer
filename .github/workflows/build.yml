@@ -113,7 +113,7 @@ jobs:
       matrix:
         scalaVersion: [2.11, 2.12, 2.13]
         spinalVersion: [1.11.0]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -122,7 +122,7 @@ jobs:
       - name: Create 'latest' Variants and Checksums
         run: |
           sha256sum msys2-*
-          sha256sum msys2-* > msys2-checksums.txt
+          sha256sum msys2-* > msys2-checksums-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.txt
 
       - name: Set Release Tag
         id: set_tag
