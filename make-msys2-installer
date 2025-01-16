@@ -65,7 +65,7 @@ clean_tmp_dir(){
 
 install_versioned_packages(){
   echo "Installing packages in specific version."
-  echo "export INSTALL_ROOT=\$(cygpath -w / | sed -e 's/\\\\/\//g' -e 's/ /\\\\ /g' -e 's/^\([A-Za-z]\):/\/\L\1/' -e 's/[\/]*$//' -e 's/\/\{2,\}/\//g')" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export INSTALL_ROOT=\$(cygpath -w / | ./dos2msys')" >> ${_newmsys}/etc/skel/.bashrc
   echo "export VERILATOR_ROOT=\${INSTALL_ROOT}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
   for pkg_file in ${_versioned_packages_url}; do
@@ -223,6 +223,7 @@ create_chroot_system() {
     pacman -S filesystem msys2-runtime --noconfirm --root "${_newmsys}"
     pacman -S base --noconfirm --root "${_newmsys}"
     pacman -S ${_packages} --noconfirm --root "${_newmsys}"
+    cp dos2msys ${_newmsys}/usr/bin
     install_versioned_packages
     install_custom_packages
     install_sdkman
