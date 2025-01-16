@@ -134,11 +134,12 @@ install_coursier(){
 setup_sbt(){
   ${COURSIER} install scala:2.12.17
   ${COURSIER} fetch --default --sources --javadoc org.scala-sbt:sbt:${_sbt_version}
-  ${COURSIER} fetch --default --sources --javadoc org.scala-sbt:compiler-bridge_${_scala_version}:1.8.0
+  ${COURSIER} fetch --default --sources --javadoc org.scala-sbt:compiler-bridge_${_scala_version}:${_sbt_version}
   ${COURSIER} fetch --default --sources --javadoc jline:jline:2.14.6
   ${COURSIER} fetch jline:jline:2.14.3
   ${COURSIER} fetch org.fusesource.jansi:jansi:1.12
-  ${COURSIER} fetch --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
+  ${COURSIER} fetch --default --sources --javadoc --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
+  ${COURSIER} fetch --default --sources --javadoc ch.epfl.scala:sbt-bloop_${_scala_version}_1.0:1.5.11
   
   echo "alias mill=mill.bat" >> ${_newmsys}/etc/skel/.bashrc
   ${COURSIER} install mill
