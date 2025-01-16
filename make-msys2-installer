@@ -66,6 +66,7 @@ clean_tmp_dir(){
 install_versioned_packages(){
   echo "Installing packages in specific version."
   echo "export ROOT_MSYS=\$(cygpath -w / | ./dos2msys)" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export ROOT_WIN=\$(cygpath -w / )" >> ${_newmsys}/etc/skel/.bashrc
   echo "export VERILATOR_ROOT=\${ROOT_MSYS}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
   for pkg_file in ${_versioned_packages_url}; do
@@ -108,7 +109,7 @@ install_sdkman(){
   sdk install java $_java_version
   sdk install sbt $_sbt_version
   export SBT_OPTS="-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
-  echo "export SBT_OPTS=\"-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=\${ROOT_MSYS}/cache/.sbt/boot -Dsbt.global.base=\${ROOT_MSYS}/cache/.sbt/1.0 -Dsbt.ivy.home=\${ROOT_MSYS}/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export SBT_OPTS=\"-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=\${ROOT_WIN}/cache/.sbt/boot -Dsbt.global.base=\${ROOT_WIN}/cache/.sbt/1.0 -Dsbt.ivy.home=\${ROOT_WIN}/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
 }
 
 install_dependencies(){
