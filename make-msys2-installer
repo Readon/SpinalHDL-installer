@@ -65,7 +65,7 @@ clean_tmp_dir(){
 
 install_versioned_packages(){
   echo "Installing packages in specific version."
-  echo "export ROOT_MSYS=\$(cygpath -w / | ./dos2msys)" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export ROOT_MSYS=\$(cygpath -w / | dos2msys)" >> ${_newmsys}/etc/skel/.bashrc
   echo "export ROOT_WIN=\$(cygpath -w / )" >> ${_newmsys}/etc/skel/.bashrc
   echo "export VERILATOR_ROOT=\${ROOT_MSYS}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
@@ -214,6 +214,8 @@ create_installer() {
 create_chroot_system() {
   echo "[Creating chroot system...]"
   rm -Rf "${_newmsysbase}" && mkdir -p "${_newmsys}"
+  mkdir -p "${_newmsys}/usr/bin"
+  cp dos2msys "${_newmsys}/usr/bin"
 
   pushd "${_newmsys}" > /dev/null
     mkdir -p var/lib/pacman
@@ -224,7 +226,6 @@ create_chroot_system() {
     pacman -S filesystem msys2-runtime --noconfirm --root "${_newmsys}"
     pacman -S base --noconfirm --root "${_newmsys}"
     pacman -S ${_packages} --noconfirm --root "${_newmsys}"
-    cp dos2msys ${_newmsys}/usr/bin
     install_versioned_packages
     install_custom_packages
     install_sdkman
