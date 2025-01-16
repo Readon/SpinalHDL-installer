@@ -226,6 +226,7 @@ create_chroot_system() {
     pacman -S filesystem msys2-runtime --noconfirm --root "${_newmsys}"
     pacman -S base --noconfirm --root "${_newmsys}"
     pacman -S ${_packages} --noconfirm --root "${_newmsys}"
+    echo -e "[core]\n        autocrlf = true" > ${_newmsys}/etc/skel/.gitconfig
     install_versioned_packages
     install_custom_packages
     install_sdkman
