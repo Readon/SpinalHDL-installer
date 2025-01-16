@@ -139,7 +139,6 @@ setup_sbt(){
   ${COURSIER} fetch jline:jline:2.14.3
   ${COURSIER} fetch org.fusesource.jansi:jansi:1.12
   ${COURSIER} fetch --default --sources --javadoc --sbt-plugin org.scalameta:sbt-scalafmt:2.4.6
-  ${COURSIER} fetch --default --sources --javadoc ch.epfl.scala:sbt-bloop_${_scala_version}_1.0:1.5.11
   
   echo "alias mill=mill.bat" >> ${_newmsys}/etc/skel/.bashrc
   ${COURSIER} install mill
