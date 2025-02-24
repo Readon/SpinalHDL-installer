@@ -216,6 +216,14 @@ create_installer() {
   popd > /dev/null
 }
 
+clean_files() {
+  echo "[clean unused files...]"
+
+  pushd "${_build}" > /dev/null
+    find /mingw64/lib -maxdepth 2 -type d -path '*/python*/test' -exec rm -rf {} +    
+  popd > /dev/null
+}
+
 create_chroot_system() {
   echo "[Creating chroot system...]"
   rm -Rf "${_newmsysbase}" && mkdir -p "${_newmsys}"
@@ -237,6 +245,7 @@ create_chroot_system() {
     install_sdkman
     install_coursier
     install_dependencies
+    clean_files
   popd > /dev/null
 }
 
