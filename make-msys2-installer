@@ -128,6 +128,7 @@ install_coursier(){
   wget "https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-win32.zip"
   unzip cs-x86_64-pc-win32.zip
   ./cs-x86_64-pc-win32.exe setup -y --dir ${COURSIER_HOME}
+  rm cs-x86_64-pc-win32.*
   
   export COURSIER="${COURSIER_HOME}/cs.bat"
 }
