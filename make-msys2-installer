@@ -110,6 +110,10 @@ install_sdkman(){
   sdk install sbt $_sbt_version
   export SBT_OPTS="-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=${_newmsys}/cache/.sbt/boot -Dsbt.global.base=${_newmsys}/cache/.sbt/1.0 -Dsbt.ivy.home=${_newmsys}/cache/.ivy2"
   echo "export SBT_OPTS=\"-Dsbt.version=${_sbt_version} -Dsbt.boot.directory=\${ROOT_WIN}/cache/.sbt/boot -Dsbt.global.base=\${ROOT_WIN}/cache/.sbt/1.0 -Dsbt.ivy.home=\${ROOT_WIN}/cache/.ivy2\"" >> ${_newmsys}/etc/skel/.bashrc
+  
+  rm -rf $SDKMAN_DIR/candidates/sbt/!(current)
+  rm -rf $SDKMAN_DIR/candidates/java/!(current)
+  rm -rf $SDKMAN_DIR/tmp
 }
 
 install_dependencies(){
