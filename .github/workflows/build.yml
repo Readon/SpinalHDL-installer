@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [2019, 2022]
+        image: [2025, 2022]
         scalaVersion: [2.11, 2.12, 2.13]
         spinalVersion: [1.12.2]
     steps:
