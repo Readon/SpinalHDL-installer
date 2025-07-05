@@ -32,7 +32,6 @@ fi
 _custom_packages="
 ${MINGW_PACKAGE_PREFIX}-yosys-${_yosys_version}-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-python-sby-${_yosys_version}-any.pkg.tar.zst
-${MINGW_PACKAGE_PREFIX}-verilator-${_verilator_version}-any.pkg.tar.zst
 "
 
 _versioned_packages_url=""
@@ -47,6 +46,7 @@ _packages=$(cat << EOF
   ${MINGW_PACKAGE_PREFIX}-z3
   ${MINGW_PACKAGE_PREFIX}-yices
   ${MINGW_PACKAGE_PREFIX}-python-click
+  ${MINGW_PACKAGE_PREFIX}-verilator
 EOF
 )
 
