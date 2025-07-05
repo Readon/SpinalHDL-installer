@@ -67,7 +67,7 @@ install_versioned_packages(){
   echo "Installing packages in specific version."
   echo "export ROOT_MSYS=\$(cygpath -w / | dos2msys)" >> ${_newmsys}/etc/skel/.bashrc
   echo "export ROOT_WIN=\$(cygpath -w / )" >> ${_newmsys}/etc/skel/.bashrc
-  echo "export VERILATOR_ROOT=\${ROOT_MSYS}/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
+  echo "export VERILATOR_ROOT=/mingw64/share/verilator" >> ${_newmsys}/etc/skel/.bashrc
   prepare_tmp_dir
   for pkg_file in ${_versioned_packages_url}; do
       if [ ! -f "${pkg_file}" ]; then
