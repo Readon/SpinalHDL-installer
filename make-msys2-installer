@@ -47,6 +47,7 @@ _packages=$(cat << EOF
   ${MINGW_PACKAGE_PREFIX}-z3
   ${MINGW_PACKAGE_PREFIX}-yices
   ${MINGW_PACKAGE_PREFIX}-python-click
+  ${MINGW_PACKAGE_PREFIX}-python-pip
 EOF
 )
 
@@ -121,6 +122,7 @@ install_sdkman(){
 install_dependencies(){
   setup_sbt
   install_spinalhdl_dependencies
+  install_python_dependencies
 }
 
 install_coursier(){
@@ -167,6 +169,11 @@ install_spinalhdl_dependencies(){
   if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_version_with_xml_error}) == "true" ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
     ${COURSIER} install scala:${_scala_version_without_xml_error}
   fi
+}
+
+install_python_dependencies(){
+  echo "export PYTHONLEGACYWINDOWSDLLLOADING=1" >> ${_newmsys}/etc/skel/.bashrc
+  pip install cocotb --root ${_newmsys}/mingw64/lib
 }
 
 create_installer_archive() {
