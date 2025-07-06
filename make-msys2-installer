@@ -173,7 +173,7 @@ install_spinalhdl_dependencies(){
 
 install_python_dependencies(){
   echo "export PYTHONLEGACYWINDOWSDLLLOADING=1" >> ${_newmsys}/etc/skel/.bashrc
-  pip install cocotb --root ${_newmsys}/mingw64/lib
+  ${_newmsys}/mingw64/bin/pip install cocotb --root ${_newmsys}/mingw64/lib
 }
 
 create_installer_archive() {
