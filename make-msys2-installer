@@ -262,6 +262,7 @@ main() {
   pacman -S --noconfirm --needed \
     "${MINGW_PACKAGE_PREFIX}-qt-installer-framework" \
     "${MINGW_PACKAGE_PREFIX}-7zip" \
+    "${MINGW_PACKAGE_PREFIX}-gcc" \
     "tar"
 
   create_chroot_system
