@@ -9,6 +9,7 @@ _scala_version="$1"
 _scala_full_version=${full_scala_versions["${_scala_version}-${_spinal_version}"]}
 
 _verilator_version="4.228-1"
+_cocotb_version="v1.18.1-1"
 
 _srcdir="$(pwd)"
 _thisdir="$( cd "$( dirname "$0" )" && pwd )"
@@ -33,6 +34,7 @@ _custom_packages="
 ${MINGW_PACKAGE_PREFIX}-yosys-${_yosys_version}-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-python-sby-${_yosys_version}-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-verilator-${_verilator_version}-any.pkg.tar.zst
+${MINGW_PACKAGE_PREFIX}-python-cocotb-${_cocotb_version}-any.pkg.tar.zst
 "
 
 _versioned_packages_url=""
@@ -173,7 +175,7 @@ install_spinalhdl_dependencies(){
 
 install_python_dependencies(){
   echo "export PYTHONLEGACYWINDOWSDLLLOADING=1" >> ${_newmsys}/etc/skel/.bashrc
-  ${_newmsys}/mingw64/bin/pip install cocotb --root ${_newmsys}/mingw64/lib
+  ${_newmsys}/mingw64/bin/pip install find_libpython --root ${_newmsys}/mingw64/lib
 }
 
 create_installer_archive() {
