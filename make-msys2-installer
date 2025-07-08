@@ -9,7 +9,7 @@ _scala_version="$1"
 _scala_full_version=${full_scala_versions["${_scala_version}-${_spinal_version}"]}
 
 _verilator_version="4.228-1"
-_cocotb_version="v1.18.1-1"
+_cocotb_version="v1.8.1-1"
 
 _srcdir="$(pwd)"
 _thisdir="$( cd "$( dirname "$0" )" && pwd )"
