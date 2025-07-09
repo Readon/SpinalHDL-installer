@@ -1,0 +1,38 @@
+name: 'SpinalHDL Test Suite'
+
+on:
+  workflow_run:
+    workflows: ['build']
+    types: [completed]  
+  workflow_dispatch:
+
+jobs:
+  spinalhdl-tests:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        scalaVersion: [2.11, 2.12, 2.13]
+        spinalVersion: [1.12.2]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup MSYS2
+        uses: Readon/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+
+      - name: Clone SpinalHDL
+        shell: msys2 {0}
+        run: git clone --depth 1 -b master https://github.com/SpinalHDL/SpinalHDL.git
+
+      - name: Run sbt Tests
+        shell: msys2 {0}
+        working-directory: SpinalHDL
+        run: |
+          sbt -Dsbt.supershell=false ++${{ matrix.scalaVersion }} test
