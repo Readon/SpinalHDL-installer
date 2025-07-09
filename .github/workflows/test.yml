@@ -27,6 +27,10 @@ jobs:
           msystem: MINGW64
           update: false
 
+      - name: Allow bashrc run on non-interactive env.
+        shell: msys2 {0}
+        run: sed -i '/^\[\[ "\$-" != \*i\* \]\] && return$/d' ~/.bashrc
+
       - name: Clone SpinalHDL
         shell: msys2 {0}
         run: git clone --depth 1 -b master https://github.com/SpinalHDL/SpinalHDL.git
