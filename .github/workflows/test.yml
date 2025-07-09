@@ -5,15 +5,21 @@ on:
     workflows: ['build']
     types: [completed]  
   workflow_dispatch:
+    inputs:      
+      scalaVersion:
+        required: true
+        type: string
+        default: "2.12"
+      spinalVersion:
+        required: true
+        type: string
+        default: "1.12.2"
 
 jobs:
-  spinalhdl-tests:
+  build-env:
     runs-on: windows-2022
     strategy:
       fail-fast: false
-      matrix:
-        scalaVersion: [2.12]
-        spinalVersion: [1.12.2]
     
     steps:
       - name: Checkout code
@@ -33,17 +39,240 @@ jobs:
 
       - name: Clone SpinalHDL
         shell: msys2 {0}
-        run: git clone --depth 1 -b master https://github.com/SpinalHDL/SpinalHDL.git
+        run: |
+          git clone --depth 1 -b master https://github.com/SpinalHDL/SpinalHDL.git
+          cd SpinalHDL
+          git submodule update --init --recursive
 
-      - name: Run sbt Tests
+      - name: Run sbt compile
         shell: msys2 {0}
         working-directory: SpinalHDL
         run: |
-          whoami
-          cat ~/.bashrc
-          source ~/.bashrc
-          echo 'source done'
-          env|grep SBT
-          env|grep COURSIER
-          env|grep SDKMAN
-          sbt ++${{ matrix.scalaVersion }} test
+          sbt ++${{ inputs.scalaVersion }} compile
+          sbt ++${{ inputs.scalaVersion }} Test/compile          
+      - uses: actions/cache/save@v3
+        with:
+          path: |
+            **/
+          key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+
+  idslplugin-test:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} idslplugin/test
+
+  idslpayload-test:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} idslpayload/test
+
+  core-test:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} 'tester/testOnly spinal.core.* -- -l spinal.tester.formal -l spinal.tester.psl'
+
+  core-formal:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} 'tester/testOnly spinal.core.* -- -n spinal.tester.formal'
+
+  sim-test:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} sim/test
+
+  tester-test:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    # Check Verilator version from image, enable disk cleaning optimization only for version 5.x
+    - name: Check Verilator version and setup disk optimization
+      shell: bash
+      run: |
+        VERILATOR_VERSION=$(verilator --version 2>/dev/null | head -1 | awk '{print $2}' || echo "unknown")
+        echo "Detected Verilator version: $VERILATOR_VERSION"
+        
+        if [[ "$VERILATOR_VERSION" == *"5."* ]]; then
+          echo "NEED_DISK_CLEANUP=true" >> $GITHUB_ENV
+          echo "Verilator 5.x detected - disk optimization will be enabled"
+        else
+          echo "NEED_DISK_CLEANUP=false" >> $GITHUB_ENV
+          echo "Verilator 4.x or lower - no disk optimization needed"
+        fi
+    # Add disk space optimization - only enable for Verilator 5.x
+    - name: Setup disk optimization for tester tests
+      if: env.NEED_DISK_CLEANUP == 'true'
+      uses: ./.github/actions/disk-cleanup
+      with:
+        cleanup_interval: '180'  # 3 minutes cleanup interval
+    - run: sbt ++${{ inputs.scalaVersion }} 'tester/testOnly spinal.tester.* -- -l spinal.tester.formal -l spinal.tester.psl'
+    # Stop disk monitor and generate report - only for cases where cleanup is enabled
+    - name: Stop disk monitor and report
+      shell: bash
+      if: always() && env.NEED_DISK_CLEANUP == 'true'
+      run: |
+        echo "Stopping disk monitor..."
+        if [ -f /tmp/disk_monitor.pid ]; then
+          PID=$(cat /tmp/disk_monitor.pid)
+          kill $PID 2>/dev/null || true
+          echo "Monitor stopped (PID: $PID)"
+        fi
+        
+        if [ -f /tmp/disk_monitor.log ]; then
+          echo "Disk monitor activity report:"
+          echo "================================"
+          tail -20 /tmp/disk_monitor.log
+          echo "================================"
+        fi
+        
+        echo "Final cleanup of SpinalHDL test artifacts..."
+        find . -name "simWorkspace" -type d -exec rm -rf {} + 2>/dev/null || true
+        find . -name "V*__ALL.cpp" -delete 2>/dev/null || true
+        find . -name "*.gch" -delete 2>/dev/null || true
+        find . -name "*.vcd" -mmin +0 -delete 2>/dev/null || true
+        
+        echo "Final disk usage report:"
+        df -h /
+
+  tester-formal:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} 'tester/testOnly spinal.tester.* -- -n spinal.tester.formal'
+
+  lib-test:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    # Check Verilator version from image, enable disk cleaning optimization only for version 5.x
+    - name: Check Verilator version and setup disk optimization
+      shell: bash
+      run: |
+        VERILATOR_VERSION=$(verilator --version 2>/dev/null | head -1 | awk '{print $2}' || echo "unknown")
+        echo "Detected Verilator version: $VERILATOR_VERSION"
+        
+        if [[ "$VERILATOR_VERSION" == *"5."* ]]; then
+          echo "NEED_DISK_CLEANUP=true" >> $GITHUB_ENV
+          echo "Verilator 5.x detected - disk optimization will be enabled"
+        else
+          echo "NEED_DISK_CLEANUP=false" >> $GITHUB_ENV
+          echo "Verilator 4.x or lower - no disk optimization needed"
+        fi
+    # Add disk space optimization - only enable for Verilator 5.x
+    - name: Setup disk optimization for lib tests
+      if: env.NEED_DISK_CLEANUP == 'true'
+      uses: ./.github/actions/disk-cleanup
+      with:
+        cleanup_interval: '180'  # 3 minutes cleanup interval
+    # Run tests for the lib module, including various bus protocols, IP cores, etc.
+    - run: sbt ++${{ inputs.scalaVersion }} 'tester/testOnly spinal.lib.* -- -l spinal.tester.formal -l spinal.tester.psl'
+    # Stop disk monitor and generate report - only for cases where cleanup is enabled
+    - name: Stop disk monitor and report
+      shell: bash
+      if: always() && env.NEED_DISK_CLEANUP == 'true'
+      run: |
+        echo "Stopping disk monitor..."
+        if [ -f /tmp/disk_monitor.pid ]; then
+          PID=$(cat /tmp/disk_monitor.pid)
+          kill $PID 2>/dev/null || true
+          echo "Monitor stopped (PID: $PID)"
+        fi
+        
+        if [ -f /tmp/disk_monitor.log ]; then
+          echo "Disk monitor activity report:"
+          echo "================================"
+          tail -20 /tmp/disk_monitor.log
+          echo "================================"
+        fi
+        
+        echo "Final cleanup of SpinalHDL test artifacts..."
+        find . -name "simWorkspace" -type d -exec rm -rf {} + 2>/dev/null || true
+        find . -name "V*__ALL.cpp" -delete 2>/dev/null || true
+        find . -name "*.gch" -delete 2>/dev/null || true
+        find . -name "*.vcd" -mmin +0 -delete 2>/dev/null || true
+        
+        echo "Final disk usage report:"
+        df -h /
+
+  lib-formal:
+    needs: build-env
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      id: get-compiled
+      with:
+        path: |
+          **/
+        key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
+    - run: sbt ++${{ inputs.scalaVersion }} 'tester/testOnly spinal.lib.* -- -n spinal.tester.formal'
