@@ -10,6 +10,7 @@ jobs:
   build-env:
     runs-on: windows-2022
     strategy:
+      max-parallel: 1
       fail-fast: false
       matrix:
         scalaVersion: [2.11, 2.12, 2.13]
