@@ -68,7 +68,12 @@ jobs:
         path: |
           **/
         key: ${{ inputs.scalaVersion }}-${{ inputs.spinalVersion }}-compiled
-    - run: sbt ++${{ inputs.scalaVersion }} idslplugin/test
+    - uses: Readon/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: false
+    - shell: msys2 {0}
+      run: sbt ++${{ inputs.scalaVersion }} idslplugin/test
 
   idslpayload-test:
     needs: build-env
