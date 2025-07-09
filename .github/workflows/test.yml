@@ -34,7 +34,7 @@ jobs:
       - name: Clone SpinalHDL
         shell: msys2 {0}
         run: |
-          git clone --depth 1 -b master https://github.com/SpinalHDL/SpinalHDL.git
+          git clone --depth 1 -b dev https://github.com/SpinalHDL/SpinalHDL.git
           cd SpinalHDL
           git submodule update --init --recursive
 
