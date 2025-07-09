@@ -36,8 +36,10 @@ jobs:
         working-directory: SpinalHDL
         run: |
           whoami
+          cat ~/.bashrc
           source ~/.bashrc
+          echo 'source done'
           env|grep SBT
           env|grep COURSIER
           env|grep SDKMAN
-          sbt -Dsbt.supershell=false ++${{ matrix.scalaVersion }} test
+          sbt ++${{ matrix.scalaVersion }} test
