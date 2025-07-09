@@ -44,15 +44,13 @@ jobs:
         run: |
           sbt ++${{ matrix.scalaVersion }} compile
           sbt ++${{ matrix.scalaVersion }} Test/compile
-      - shell: msys2 {0}
+      - name: Run sbt test
+        shell: msys2 {0}
         working-directory: SpinalHDL
         run: |
           sbt ++${{ matrix.scalaVersion }} idslplugin/test
           sbt ++${{ matrix.scalaVersion }} idslpayload/test
-          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.core.* -- -l spinal.tester.formal -l spinal.tester.psl'
-          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.core.* -- -n spinal.tester.formal'
+          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.core.* -- -l spinal.tester.psl'
           sbt ++${{ matrix.scalaVersion }} sim/test
-          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.tester.* -- -l spinal.tester.formal -l spinal.tester.psl'
-          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.tester.* -- -n spinal.tester.formal'
-          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.lib.* -- -l spinal.tester.formal -l spinal.tester.psl'
-          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.lib.* -- -n spinal.tester.formal'
+          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.tester.* -- -l spinal.tester.psl'
+          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.lib.* -- -l spinal.tester.psl'
