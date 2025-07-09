@@ -48,6 +48,7 @@ jobs:
         shell: msys2 {0}
         working-directory: SpinalHDL
         run: |
+          export WAVES_DIR="${PWD}/cocotbWorkspace"
           sbt ++${{ matrix.scalaVersion }} idslplugin/test
           sbt ++${{ matrix.scalaVersion }} idslpayload/test
           sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.core.* -- -l spinal.tester.psl'
