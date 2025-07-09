@@ -25,7 +25,7 @@ jobs:
         uses: Readon/setup-msys2@v2
         with:
           msystem: MINGW64
-          update: true
+          update: false
 
       - name: Clone SpinalHDL
         shell: msys2 {0}
@@ -35,7 +35,9 @@ jobs:
         shell: msys2 {0}
         working-directory: SpinalHDL
         run: |
-          pwd -W
-          ls -al
-          env
+          whoami
+          source ~/.bashrc
+          env|grep SBT
+          env|grep COURSIER
+          env|grep SDKMAN
           sbt -Dsbt.supershell=false ++${{ matrix.scalaVersion }} test
