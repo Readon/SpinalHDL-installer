@@ -1,0 +1,58 @@
+name: 'SpinalHDL Test Suite'
+
+on:
+  workflow_run:
+    workflows: ['build']
+    types: [completed]  
+  workflow_dispatch:
+
+jobs:
+  build-env:
+    runs-on: windows-2022
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        scalaVersion: [2.11, 2.12, 2.13]
+        spinalVersion: [1.12.2]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup MSYS2
+        uses: Readon/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+
+      - name: Allow bashrc run on non-interactive env.
+        shell: msys2 {0}
+        run: sed -i '/^\[\[ "\$-" != \*i\* \]\] && return$/d' ~/.bashrc
+
+      - name: Clone SpinalHDL
+        shell: msys2 {0}
+        run: |
+          git clone --depth 1 -b dev https://github.com/Readon/SpinalHDL.git
+          cd SpinalHDL
+          git submodule update --init --recursive
+
+      - name: Run sbt compile
+        shell: msys2 {0}
+        working-directory: SpinalHDL
+        run: |
+          sbt ++${{ matrix.scalaVersion }} compile
+          sbt ++${{ matrix.scalaVersion }} Test/compile
+      - name: Run sbt test
+        shell: msys2 {0}
+        working-directory: SpinalHDL
+        run: |
+          export WAVES_DIR="${PWD}/cocotbWorkspace"
+          sbt ++${{ matrix.scalaVersion }} idslplugin/test
+          sbt ++${{ matrix.scalaVersion }} idslpayload/test
+          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.core.* -- -l spinal.tester.psl'
+          sbt ++${{ matrix.scalaVersion }} sim/test
+          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.tester.* -- -l spinal.tester.psl'
+          sbt ++${{ matrix.scalaVersion }} 'tester/testOnly spinal.lib.* -- -l spinal.tester.psl'

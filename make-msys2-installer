@@ -9,6 +9,7 @@ _scala_version="$1"
 _scala_full_version=${full_scala_versions["${_scala_version}-${_spinal_version}"]}
 
 _verilator_version="4.228-1"
+_cocotb_version="v1.8.1-1"
 
 _srcdir="$(pwd)"
 _thisdir="$( cd "$( dirname "$0" )" && pwd )"
@@ -32,6 +33,7 @@ fi
 _custom_packages="
 ${MINGW_PACKAGE_PREFIX}-yosys-${_yosys_version}-any.pkg.tar.zst
 ${MINGW_PACKAGE_PREFIX}-python-sby-${_yosys_version}-any.pkg.tar.zst
+${MINGW_PACKAGE_PREFIX}-python-cocotb-${_cocotb_version}-any.pkg.tar.zst
 "
 
 _versioned_packages_url=""
@@ -46,6 +48,7 @@ _packages=$(cat << EOF
   ${MINGW_PACKAGE_PREFIX}-z3
   ${MINGW_PACKAGE_PREFIX}-yices
   ${MINGW_PACKAGE_PREFIX}-python-click
+  ${MINGW_PACKAGE_PREFIX}-python-pip  
   ${MINGW_PACKAGE_PREFIX}-verilator
 EOF
 )
@@ -121,6 +124,7 @@ install_sdkman(){
 install_dependencies(){
   setup_sbt
   install_spinalhdl_dependencies
+  install_python_dependencies
 }
 
 install_coursier(){
@@ -167,6 +171,11 @@ install_spinalhdl_dependencies(){
   if [ $(is_version_smaller_eq ${_spinal_version} ${_spinal_version_with_xml_error}) == "true" ] && [ ${_scala_version} == ${_scala_version_with_xml_error} ]; then
     ${COURSIER} install scala:${_scala_version_without_xml_error}
   fi
+}
+
+install_python_dependencies(){
+  echo "export PYTHONLEGACYWINDOWSDLLLOADING=1" >> ${_newmsys}/etc/skel/.bashrc
+  ${_newmsys}/mingw64/bin/pip install find_libpython --root ${_newmsys}/mingw64/lib
 }
 
 create_installer_archive() {
@@ -255,6 +264,7 @@ main() {
   pacman -S --noconfirm --needed \
     "${MINGW_PACKAGE_PREFIX}-qt-installer-framework" \
     "${MINGW_PACKAGE_PREFIX}-7zip" \
+    "${MINGW_PACKAGE_PREFIX}-gcc" \
     "tar"
 
   create_chroot_system
