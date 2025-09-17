@@ -22,14 +22,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup MSYS2
-        uses: Readon/setup-msys2@v2
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
         with:
+          name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
+          path: ./artifacts
+
+      - name: Extract Installer Checksum
+        id: extract_checksum
+        shell: bash
+        run: |
+          installer_name="msys2-x86_64-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.exe"
+          checksum=$(grep "$installer_name" ./artifacts/msys2-checksums.txt | awk '{print $1}')
+          echo "checksum=$checksum" >> $GITHUB_OUTPUT
+
+      - name: Set installer path
+        id: set_installer_path
+        shell: bash
+        run: |
+          installer_path="./artifacts/msys2-x86_64-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.exe"
+          echo "installer-path=$installer_path" >> $GITHUB_OUTPUT
+          
+      - name: Run custom installer
+        run: |
+          "${{ steps.set_installer_path.outputs.installer-path }}" in --confirm-command --accept-messages --root C:\msys64
+      - name: Setup MSYS2 environment
+        uses: msys2/setup-msys2@v2
+        with:
+          release: false
+          update: true
           msystem: MINGW64
-          update: false
-          spinal-version: 1.13.0
-          installer-version: v1.13.0
-          installer-checksum: b6bb8b5c3134ee008a5716a842fb7624e38c42fbcbb32abaee1f60456d343271
 
       - name: Allow bashrc run on non-interactive env.
         shell: msys2 {0}
