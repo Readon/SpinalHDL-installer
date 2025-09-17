@@ -28,7 +28,7 @@ jobs:
           msystem: MINGW64
           update: false
           installer-version: v1.13.0
-          installer-checksum: 6063018d0b21af7dc9897202cd89ce78633fd06ae94800718504e8aa20d3b988
+          installer-checksum: b6bb8b5c3134ee008a5716a842fb7624e38c42fbcbb32abaee1f60456d343271
 
       - name: Allow bashrc run on non-interactive env.
         shell: msys2 {0}
