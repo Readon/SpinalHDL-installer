@@ -16,7 +16,6 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: windows-2022
     strategy:
-      max-parallel: 1
       fail-fast: false
       matrix:
         scalaVersion: [2.11, 2.12, 2.13]
