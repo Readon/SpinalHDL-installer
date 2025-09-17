@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         scalaVersion: [2.11, 2.12, 2.13]
-        spinalVersion: [1.12.2]
+        spinalVersion: [1.13.0]
     
     steps:
       - name: Checkout code
@@ -27,6 +27,8 @@ jobs:
         with:
           msystem: MINGW64
           update: false
+          installer-version: v1.13.0
+          installer-checksum: 6063018d0b21af7dc9897202cd89ce78633fd06ae94800718504e8aa20d3b988
 
       - name: Allow bashrc run on non-interactive env.
         shell: msys2 {0}
