@@ -46,6 +46,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
           path: ./artifacts
           run-id: ${{ steps.set_run_id.outputs.run_id }}
