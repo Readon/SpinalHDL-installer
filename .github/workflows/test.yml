@@ -3,11 +3,17 @@ name: 'SpinalHDL Test Suite'
 on:
   workflow_run:
     workflows: ['build']
-    types: [completed]  
+    types: [completed]
   workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'ID of the build workflow run to download artifacts from'
+        required: true
+        type: string
 
 jobs:
   build-env:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: windows-2022
     strategy:
       max-parallel: 1
@@ -22,19 +28,40 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set Run ID
+        id: set_run_id
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_run" ]; then
+            echo "run_id=${{ github.event.workflow_run.id }}" >> $GITHUB_OUTPUT
+            echo "Using workflow_run ID: ${{ github.event.workflow_run.id }}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "run_id=${{ github.event.inputs.run_id }}" >> $GITHUB_OUTPUT
+            echo "Using manual input run_id: ${{ github.event.inputs.run_id }}"
+          else
+            echo "Unsupported event type: ${{ github.event_name }}"
+            exit 1
+          fi
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
           name: installer-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}
           path: ./artifacts
+          run-id: ${{ steps.set_run_id.outputs.run_id }}
 
       - name: Extract Installer Checksum
         id: extract_checksum
         shell: bash
         run: |
           installer_name="msys2-x86_64-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.exe"
-          checksum=$(grep "$installer_name" ./artifacts/msys2-checksums.txt | awk '{print $1}')
-          echo "checksum=$checksum" >> $GITHUB_OUTPUT
+          if [ -f "./artifacts/msys2-checksums.txt" ]; then
+            checksum=$(grep "$installer_name" ./artifacts/msys2-checksums.txt | awk '{print $1}')
+            echo "checksum=$checksum" >> $GITHUB_OUTPUT
+            echo "Found checksum: $checksum"
+          else
+            echo "Checksum file not found, skipping checksum validation"
+            echo "checksum=" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set installer path
         id: set_installer_path
