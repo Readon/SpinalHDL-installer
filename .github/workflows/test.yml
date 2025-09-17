@@ -72,6 +72,11 @@ jobs:
           installer_path="./artifacts/msys2-x86_64-${{ matrix.scalaVersion }}-${{ matrix.spinalVersion }}.exe"
           echo "installer-path=$installer_path" >> $GITHUB_OUTPUT
           
+      - name: Clean msys64 root
+        shell: bash
+        run: |
+          rm -rf C:/msys64
+          
       - name: Run custom installer
         shell: bash
         run: |
