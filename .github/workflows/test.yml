@@ -73,8 +73,10 @@ jobs:
           echo "installer-path=$installer_path" >> $GITHUB_OUTPUT
           
       - name: Run custom installer
+        shell: bash
         run: |
-          "${{ steps.set_installer_path.outputs.installer-path }}" in --confirm-command --accept-messages --root C:\msys64
+          "${{ steps.set_installer_path.outputs.installer-path }}" in --confirm-command --accept-messages --root C:/msys64
+
       - name: Setup MSYS2 environment
         uses: msys2/setup-msys2@v2
         with:
